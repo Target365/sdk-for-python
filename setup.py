@@ -13,6 +13,11 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url="https://github.com/target365/target365-sdk-python",
     packages=setuptools.find_packages(),
+    install_requires=[
+          'requests',
+          'ecdsa',
+          'jsonpickle',
+      ],
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",

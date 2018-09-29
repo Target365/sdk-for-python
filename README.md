@@ -1,2 +1,1 @@
-# Target365 SDK for Python
-This project provides code for Python that makes it easy to use Target365 APIs.
+This client library enables working with the Target365 online services which includes address lookup, sending and receiving text messages and more.

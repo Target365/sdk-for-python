@@ -74,7 +74,7 @@ class ApiClient:
         if shortNumberId is not None:
             params["shortNumberId"] = shortNumberId
         if keyword is not None:
-            params["keyword"] = keyword
+            params["keywordText"] = keyword
         if mode is not None:
             params["mode"] = mode
         if tag is not None:

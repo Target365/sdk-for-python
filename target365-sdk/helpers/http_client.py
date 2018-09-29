@@ -26,7 +26,7 @@ class HttpClient:
         if len(queryParams.keys()) > 0:
             url += "?"
 
-        absoluteUri = url + urllib.parse.urlencode(queryParams)
+        absoluteUri = (url + urllib.parse.urlencode(queryParams)).lower()
         return requests.get(self._buildUrl(path), params=queryParams, headers=self._getAuthHeader("get", absoluteUri))
 
     def post(self, path, body):

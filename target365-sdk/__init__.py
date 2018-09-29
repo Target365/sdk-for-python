@@ -263,31 +263,3 @@ class ApiClient:
 
         response = self.client.delete(self.STREX_MERCHANTS + "/" + merchantId)
         self.errorHandler.throwIfNotSuccess(response)
-
-## Testing
-baseUri = "https://test.target365.io/"
-keyName = "CreologixTest2"
-
-# Raw Hex private key
-privateKey = "07CC657050F80EE186E2ECD53B39C0DEB28B6F41F3FC0408A8C26F2ECD9A6212"
-
-client = ApiClient(baseUri, keyName, privateKey)
-
-# client.Lookup("hello world") # causes HttpException because not success status code coming back
-
-# testing PUT
-# merchant = StrexMerchantId()
-# merchant.merchantId = "asdf"
-# merchant.shortNumberId = "shortNumberId"
-# merchant.encryptedPassword = "imencrypted"
-# print(client.SaveMerchant(merchant))
-
-# testing POST
-# keyword = Keyword()
-# keyword.keywordId = "id"
-# keyword.shortNumberId = "id"
-# keyword.keywordText = "id"
-# keyword.mode = "id"
-# keyword.forwardUrl = "id"
-# keyword.enabled = False
-# print(client.CreateKeyword(keyword))

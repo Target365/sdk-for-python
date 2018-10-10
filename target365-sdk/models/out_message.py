@@ -1,24 +1,26 @@
 class OutMessage:
-    def fromDict(self, dict):
-        self.mobile = dict["mobile"]
-        self.transactionId = dict["transactionId"]
-        self.correlationId = dict["correlationId"]
-        self.keywordId = dict["keywordId"]
-        self.sender = dict["sender"]
-        self.recipient = dict["recipient"]
-        self.content = dict["content"]
-        self.sendTime = dict["sendTime"]
-        self.timeToLive = dict["timeToLive"]
-        self.priority = dict["priority"]
-        self.deliveryMode = dict["deliveryMode"]
-        self.merchantId = dict["merchantId"]
-        self.serviceCode = dict["serviceCode"]
-        self.invoiceText = dict["invoiceText"]
-        self.price = dict["price"]
-        self.deliveryReportUrl = dict["deliveryReportUrl"]
-        self.lastModified = dict["lastModified"]
-        self.created = dict["created"]
-        self.statusCode = dict["statusCode"]
-        self.delivered = dict["delivered"]
-        self.billed = dict["billed"]
-        self.tags = dict["tags"]
+    def fromDict(self, dictionnaryItem):
+        self.transactionId = dictionnaryItem["transactionId"]
+        self.correlationId = dictionnaryItem["correlationId"]
+        self.keywordId = dictionnaryItem["keywordId"]
+        self.sender = dictionnaryItem["sender"]
+        self.recipient = dictionnaryItem["recipient"]
+        self.content = dictionnaryItem["content"]
+        self.sendTime = dictionnaryItem["sendTime"]
+        self.timeToLive = dictionnaryItem["timeToLive"]
+        self.priority = dictionnaryItem["priority"]
+        self.deliveryMode = dictionnaryItem["deliveryMode"]
+        
+        # only used for STREX messages
+        self.merchantId = dictionnaryItem.get("merchantId", None)
+        self.serviceCode = dictionnaryItem.get("serviceCode", None)
+        self.invoiceText = dictionnaryItem.get("invoiceText", None)
+        self.price = dictionnaryItem.get("price", None)
+        
+        self.deliveryReportUrl = dictionnaryItem["deliveryReportUrl"]
+        self.lastModified = dictionnaryItem["lastModified"]
+        self.created = dictionnaryItem["created"]
+        self.statusCode = dictionnaryItem["statusCode"]
+        self.delivered = dictionnaryItem["delivered"]
+        self.billed = dictionnaryItem["billed"]
+        self.tags = dictionnaryItem["tags"]

@@ -17,6 +17,6 @@ class Keyword:
         for item in listOfKeywords:
             keyword = Keyword()
             keyword.fromDict(item)
-            items.append(item)
+            items.append(keyword)
 
         return items

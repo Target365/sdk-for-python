@@ -106,6 +106,9 @@ class Test_TestApiClient(unittest.TestCase):
         self.client.DeleteOutMessage(str(t2))
         self.client.DeleteOutMessage(str(t3))
 
+    def test_PrepareMsisdns(self):
+        self.client.PrepareMsisdns(["+4798079008"])        
+
     def test_LookupShouldReturnResult(self):
         self.assertIsNotNone(self.client.Lookup("+4798079008"))
 

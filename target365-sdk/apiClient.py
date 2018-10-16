@@ -12,6 +12,7 @@ class ApiClient:
     LOOKUP = "api/lookup"
     KEYWORDS = "api/keywords"
     OUT_MESSAGES = "api/out-messages"
+    PREPARE_MSISDNS = "api/prepare-msisdns"
     STREX_MERCHANTS = "api/strex/merchants"
 
     NOT_FOUND = 404
@@ -130,6 +131,15 @@ class ApiClient:
         self.errorHandler.throwIfNotSuccess(response)
 
     # OutMessage controller
+    def PrepareMsisdns(self, msisdns):
+        """
+        MSISDNs to prepare as a string array
+        :message: string[]
+        """
+        if msisdns is None:
+            raise ValueError("msisdns")
+        response = self.client.post(self.PREPARE_MSISDNS, msisdns)
+        self.errorHandler.throwIfNotSuccess(response)
 
     def CreateOutMessage(self, message):
         """

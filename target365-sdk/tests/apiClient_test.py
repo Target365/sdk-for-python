@@ -10,9 +10,9 @@ from models.strex_merchant_id import StrexMerchantId
 
 
 class Test_TestApiClient(unittest.TestCase):
-    baseUri = "https://test.target365.io/"
-    keyName = "CreologixTest2"
-    privateKey = "07CC657050F80EE186E2ECD53B39C0DEB28B6F41F3FC0408A8C26F2ECD9A6212"
+    baseUri = ""
+    keyName = ""
+    privateKey = ""
     client = ApiClient(baseUri, keyName, privateKey)
 
     validShortNumberId = "NO-0000"
@@ -30,8 +30,7 @@ class Test_TestApiClient(unittest.TestCase):
 
         # Create a keyword
         createdId = self.client.CreateKeyword(keyword)
-        self.assertGreater(int(createdId), 0)
-
+        
         # Get the created keyword
         fetchedKeyword = self.client.GetKeyword(str(createdId))
         self.assertEqual(fetchedKeyword.keywordText, keyword.keywordText)

@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+source test_secrets.sh
+
+export PYTHONPATH=`pwd`:$PYTHONPATH:.
+# export ENV=dev
+
+cd tests
+
+if [ -z "$1" ]
+then
+    echo "running tests except 'skip'"   # tests flagged as skip are skipped by default
+    py.test -v --capture=no
+fi
+
+
+if [ "$1" = "testnow" ]
+then
+    echo "Running 'testnow' only"
+    py.test -v --capture=no -m testnow
+fi
+
+

@@ -1,16 +1,16 @@
 class Keyword:
 
-    def fromDict(self, dictionnaryItem):
-        self.keywordId = dictionnaryItem["keywordId"]
-        self.shortNumberId = dictionnaryItem["shortNumberId"]
-        self.keywordText = dictionnaryItem["keywordText"]
-        self.mode = dictionnaryItem["mode"]
-        self.forwardUrl = dictionnaryItem["forwardUrl"]
-        self.enabled = dictionnaryItem["enabled"]
-        self.created = dictionnaryItem["created"]
-        self.lastModified = dictionnaryItem["lastModified"]
-        self.tags = dictionnaryItem["tags"]
-        self.customProperties = dictionnaryItem.get("customProperties", None)
+    def fromDict(self, dictionaryItem):
+        self.keywordId = dictionaryItem["keywordId"]
+        self.shortNumberId = dictionaryItem["shortNumberId"]
+        self.keywordText = dictionaryItem["keywordText"]
+        self.mode = dictionaryItem["mode"]
+        self.forwardUrl = dictionaryItem["forwardUrl"]
+        self.enabled = dictionaryItem["enabled"]
+        self.created = dictionaryItem["created"]
+        self.lastModified = dictionaryItem["lastModified"]
+        self.tags = dictionaryItem["tags"]
+        self.customProperties = dictionaryItem.get("customProperties", None)
 
     def fromResponseList(self, listOfKeywords):
         items = []

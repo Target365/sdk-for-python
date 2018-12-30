@@ -20,12 +20,18 @@ def transactionId():
     return '79f35793-6d70-423c-a7f7-ae9fb1024f3b'
 
 @pytest.fixture
-def client():
-    baseUri = "https://test.target365.io/"
-    keyName = os.environ['API_KEY_NAME']
-    privateKey = os.environ['API_PRIVATE_KEY']
+def apiKeyName():
+    return os.environ['API_KEY_NAME']
 
-    client = ApiClient(baseUri, keyName, privateKey)
+@pytest.fixture
+def apiPrivateKey():
+    return os.environ['API_PRIVATE_KEY']
+
+@pytest.fixture
+def client(apiKeyName, apiPrivateKey):
+    baseUri = "https://test.target365.io/"
+
+    client = ApiClient(baseUri, apiKeyName, apiPrivateKey)
 
     return client
 
@@ -183,9 +189,30 @@ def test_GetTransaction(client, transactionId):
     client.GetTransaction(transactionId)
 
 
-@pytest.mark.testnow
 def test_DeleteTransaction(client, transactionId):
     client.DeleteTransaction(transactionId)
+
+
+def test_GetServerPublicKey(client):
+    client.GetServerPublicKey('todo')
+
+
+def test_GetClientPublicKeys(client, apiKeyName):
+    client_public_keys = client.GetClientPublicKeys()
+
+    found_key = False
+    for client_public_key in client_public_keys:
+        if client_public_key['name'] == apiKeyName:
+            found_key = True
+
+    assert found_key == True
+
+
+@pytest.mark.testnow
+def test_GetClientPublicKey(client, apiKeyName):
+    client_public_key = client.GetClientPublicKey(apiKeyName)
+
+    assert client_public_key['name'] == apiKeyName
 
 
 # Formats datetime object into utc string

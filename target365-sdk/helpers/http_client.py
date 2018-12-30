@@ -41,7 +41,7 @@ class HttpClient:
         return requests.delete(self._buildUrl(path), headers=self._getAuthHeader("delete", self._buildUrl(path)))
 
     def _buildUrl(self, path):
-        return self.baseUri + path
+        return (self.baseUri + path).lower()
 
     def _getAuthHeader(self, method, uri, body=None):
         signature = self._getSignature(method, uri, body)

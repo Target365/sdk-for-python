@@ -7,13 +7,6 @@ from models.strex_merchant_id import StrexMerchantId
 from models.one_time_password_info import OneTimePasswordInfo
 
 
-#
-# TODO - not yet covered by this client library
-#
-# Four endpoints in swagger documentation under the "public-keys" heading
-
-
-
 name = "target365-sdk"
 
 class ApiClient:
@@ -26,6 +19,8 @@ class ApiClient:
     STREX_MERCHANTS = "api/strex/merchants"
     STREX_TRANSACTIONS = "api/strex/transactions"
     STREX_ONE_TIME_PASSWORDS = "api/strex/one-time-passwords"
+    SERVER_PUBLIC_KEYS = "api/server/public-keys"
+    CLIENT_PUBLIC_KEYS = "api/client/public-keys"
 
     NOT_FOUND = 404
 
@@ -33,20 +28,23 @@ class ApiClient:
         self.client = HttpClient(baseUri, keyName, privateKey)
         self.errorHandler = HttpErrorHandler()
 
-    # Ping controller
+    ###  Ping controller  ###
+
     def Ping(self):
         """
-          Pings the service and returns a hello message
-          :return: return description
+        GET /api/ping
+        Pings the service and returns a hello message
+        :return: return description
         """
         response = self.client.get(self.PING)
         self.errorHandler.throwIfNotSuccess(response)
         return response.text # returns the string "pong"
 
-    # Lookup controller
+    ###  Lookup controller  ###
 
     def Lookup(self, msisdn):
         """
+        GET /api/lookup
         Looks up address info on a mobile phone number.
         :msisdn: Mobile phone number (required)
         :return: LookupResult
@@ -63,10 +61,11 @@ class ApiClient:
         lookupResult.fromDict(response.json())
         return lookupResult
 
-    # Keyword controller
+    ###  Keyword controller  ###
 
     def CreateKeyword(self, keyword):
         """
+        POST /api/keywords
         Creates a new keyword.
         :keyword: Keyword
         :return: string
@@ -80,6 +79,7 @@ class ApiClient:
 
     def GetAllKeywords(self, shortNumberId=None, keyword=None, mode=None, tag=None):
         """
+        GET /api/keywords
         Gets all keywords.
         :return: Keyword[]
         """
@@ -99,6 +99,7 @@ class ApiClient:
 
     def GetKeyword(self, keywordId):
         """
+        GET /api/keywords/{keywordId}
         Gets a keyword.
         :keywordId: string
         :return: Keyword
@@ -118,7 +119,8 @@ class ApiClient:
 
     def UpdateKeyword(self, keyword):
         """
-        Updates a keywrod
+        PUT /api/keywords/{keywordId}
+        Updates a keyword
         :keyword: Keyword to update      
         """
         if keyword is None:
@@ -133,6 +135,7 @@ class ApiClient:
 
     def DeleteKeyword(self, keywordId):
         """
+        DELETE /api/keywords/{keywordId}
         Deletes a keyword
         :keywordId: string
         """
@@ -142,9 +145,11 @@ class ApiClient:
         response = self.client.delete(self.KEYWORDS + "/" + keywordId)
         self.errorHandler.throwIfNotSuccess(response)
 
-    # OutMessage controller
+    ###  OutMessage controller  ###
+
     def PrepareMsisdns(self, msisdns):
         """
+        POST /api/prepare-msisdns
         MSISDNs to prepare as a string array
         :message: string[]
         """
@@ -155,6 +160,7 @@ class ApiClient:
 
     def CreateOutMessage(self, message):
         """
+        POST /api/out-messages
         Creates a new out-message
         :message: OutMessage
         """
@@ -168,6 +174,7 @@ class ApiClient:
 
     def CreateOutMessageBatch(self, messages):
         """
+        POST /api/out-messages/batch
         Creates a new out-message batch.
         :messages: OutMessage[]
         """
@@ -179,6 +186,7 @@ class ApiClient:
 
     def GetOutMessage(self, transactionId):
         """
+        GET /api/out-messages/batch/{transactionId}
         Gets and out-message
         :transactionId: string
         :return: OutMessage
@@ -195,8 +203,10 @@ class ApiClient:
         outMessage.fromDict(response.json())
         return outMessage
 
+
     def UpdateOutMessage(self, message):
         """
+        PUT /api/out-messages/batch/{transactionId}
         Updates a future scheduled out-message.
         :message: OutMessage
         """
@@ -209,8 +219,10 @@ class ApiClient:
             self.OUT_MESSAGES + "/" + message.transactionId, message)
         self.errorHandler.throwIfNotSuccess(response)
 
+
     def DeleteOutMessage(self, transactionId):
         """
+        DELETE /api/out-messages/batch/{transactionId}
         Deletes a future sheduled out-message.
         :transactionId: string
         """
@@ -221,9 +233,9 @@ class ApiClient:
         self.errorHandler.throwIfNotSuccess(response)
 
 
-    # TODO def inMessage
-    # GET / api / in -messages / {shortNumberId} / {transactionId}
-    # I have writtena unit test for this already, but for some reason was getting this error
+    ###  InMessages controller  ###
+
+    # TODO I have written unit test for this already, but for some reason was getting this error
     # Unauthorized - incorrect HMAC signature @ https://test.target365.io/api/in-messages/no-0000/79f35793-6d70-423c-a7f7-ae9fb1024f3b
     def GetInMessage(self, shortNumberId, transactionId):
         """
@@ -250,7 +262,7 @@ class ApiClient:
         # return outMessage
 
 
-    # StrexMerchantIds controller
+    ###  StrexMerchantIds controller  ###
 
     def GetMerchantIds(self):
         """
@@ -360,6 +372,7 @@ class ApiClient:
 
         return oneTimePasswordInfo
 
+
     def CreateTransaction(self):
         """
         POST /api/strex/transactions
@@ -411,6 +424,52 @@ class ApiClient:
         """
         # TODO Need a transaction which I can delete
         pass
+
+
+    ### PublicKey controller  ###
+
+    def GetServerPublicKey(self, keyName):
+        # TODO
+        """
+        GET /api/server/public-keys/{keyName}
+        :param keyName:
+        :return:
+        """
+        response = self.client.get(self.SERVER_PUBLIC_KEYS + '/' + keyName)
+        self.errorHandler.throwIfNotSuccess(response)
+
+        print(response)
+
+
+    def GetClientPublicKeys(self):
+        """
+        GET /api/client/public-keys
+        :return: List
+        """
+        response = self.client.get(self.CLIENT_PUBLIC_KEYS)
+        self.errorHandler.throwIfNotSuccess(response)
+
+        return response.json()
+
+
+    def GetClientPublicKey(self, keyName):
+        """
+        GET /api/client/public-keys/{keyName}
+        :return: Dict
+        """
+        response = self.client.get(self.CLIENT_PUBLIC_KEYS + '/' + keyName)
+        self.errorHandler.throwIfNotSuccess(response)
+
+        return response.json()
+
+
+    def DeleteClientPublicKey(self, keyName):
+        """
+        DELETE /api/client/public-keys/{keyName}
+        :return:
+        """
+        response = self.client.delete(self.CLIENT_PUBLIC_KEYS + '/' + keyName)
+        self.errorHandler.throwIfNotSuccess(response)
 
 
     def _getIdFromHeader(self, headers):

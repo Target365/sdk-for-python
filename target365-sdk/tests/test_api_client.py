@@ -8,11 +8,16 @@ from models.lookup_result import LookupResult
 from models.keyword import Keyword
 from models.out_message import OutMessage
 from models.strex_merchant_id import StrexMerchantId
+from models.one_time_password_info import OneTimePasswordInfo
 
 
 @pytest.fixture
 def validShortNumberId():
     return 'NO-0000'
+
+@pytest.fixture
+def transactionId():
+    return '79f35793-6d70-423c-a7f7-ae9fb1024f3b'
 
 @pytest.fixture
 def client():
@@ -117,6 +122,14 @@ def test_OutMessageSequence(client, validShortNumberId):
 def test_PrepareMsisdns(client):
     client.PrepareMsisdns(["+4798079008"])
 
+
+
+def test_InMessages(client, validShortNumberId, transactionId ):
+    x = client.GetInMessage(validShortNumberId, transactionId)
+    print(x)
+    # TODO
+    pass
+
 def test_LookupShouldReturnResult(client):
     assert client.Lookup("+4798079008") is not None
 
@@ -140,6 +153,39 @@ def test_StrexMerchantIdSequence(client, validShortNumberId):
     # delete
     client.DeleteMerchant(merchantIdIdentifier)
     assert client.GetMerchant(merchantIdIdentifier) is None
+
+
+
+def test_CreateOneTimePassword(client, transactionId):
+
+    oneTimePasswordInfo = OneTimePasswordInfo
+    oneTimePasswordInfo.transactionId = transactionId
+    oneTimePasswordInfo.merchantId = 'mer_test'
+    oneTimePasswordInfo.recipient = '+4798079008'
+    oneTimePasswordInfo.sender = 'Test'
+    oneTimePasswordInfo.recurring = False
+
+    client.CreateOneTimePassword(oneTimePasswordInfo)
+
+
+def test_GetTimePassword(client, transactionId):
+    oneTimePasswordInfo = client.GetOneTimePassword(transactionId)
+
+    assert oneTimePasswordInfo.transactionId == transactionId
+
+
+
+def test_CreateTransaction(client):
+    client.CreateTransaction()
+
+
+def test_GetTransaction(client, transactionId):
+    client.GetTransaction(transactionId)
+
+
+@pytest.mark.testnow
+def test_DeleteTransaction(client, transactionId):
+    client.DeleteTransaction(transactionId)
 
 
 # Formats datetime object into utc string

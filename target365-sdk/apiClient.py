@@ -4,6 +4,15 @@ from models.lookup_result import LookupResult
 from models.keyword import Keyword
 from models.out_message import OutMessage
 from models.strex_merchant_id import StrexMerchantId
+from models.one_time_password_info import OneTimePasswordInfo
+
+
+#
+# TODO - not yet covered by this client library
+#
+# Four endpoints in swagger documentation under the "public-keys" heading
+
+
 
 name = "target365-sdk"
 
@@ -12,8 +21,11 @@ class ApiClient:
     LOOKUP = "api/lookup"
     KEYWORDS = "api/keywords"
     OUT_MESSAGES = "api/out-messages"
+    IN_MESSAGES = "api/in-messages"
     PREPARE_MSISDNS = "api/prepare-msisdns"
     STREX_MERCHANTS = "api/strex/merchants"
+    STREX_TRANSACTIONS = "api/strex/transactions"
+    STREX_ONE_TIME_PASSWORDS = "api/strex/one-time-passwords"
 
     NOT_FOUND = 404
 
@@ -208,26 +220,41 @@ class ApiClient:
         response = self.client.delete(self.OUT_MESSAGES + "/" + transactionId)
         self.errorHandler.throwIfNotSuccess(response)
 
-    def ReversePayment(self, transactionId):
+
+    # TODO def inMessage
+    # GET / api / in -messages / {shortNumberId} / {transactionId}
+    # I have writtena unit test for this already, but for some reason was getting this error
+    # Unauthorized - incorrect HMAC signature @ https://test.target365.io/api/in-messages/no-0000/79f35793-6d70-423c-a7f7-ae9fb1024f3b
+    def GetInMessage(self, shortNumberId, transactionId):
         """
-        NOT IN SWAGGER SPEC
-        Reverses a payment transaction
-        This method is idempotent and can be called multiple times without problems.
+        GET /api/in-messages/{shortNumberId}/{transactionId}
+        Gets and in-message
+        :shortNumberId: string
         :transactionId: string
-        :return: string
+        :return: InMessage TODO no inmessage class at the moment
         """
         if transactionId is None:
             raise ValueError("transactionId")
 
-        response = self.client.get(
-            "api/reverse-payment", params={'transactionId': transactionId})
-        self.errorHandler.throwIfNotSuccess(response)
-        return self._getIdFromHeader(response.headers)
+        response = self.client.get(self.IN_MESSAGES + "/" + shortNumberId + "/" + transactionId)
+
+        print(response)
+
+        # if response.status_code == self.NOT_FOUND:
+        #     return None
+        #
+        # TODO this still coded to OutMessage
+        # self.errorHandler.throwIfNotSuccess(response)
+        # outMessage = OutMessage()
+        # outMessage.fromDict(response.json())
+        # return outMessage
+
 
     # StrexMerchantIds controller
 
     def GetMerchantIds(self):
         """
+        GET /api/strex/merchants
         Gets all merchant ids.
         :return: StrexMerchantId[]
         """
@@ -237,6 +264,7 @@ class ApiClient:
 
     def GetMerchant(self, merchantId):
         """
+        GET /api/strex/merchants/{merchantId}
         Gets a merchant.
         :merchantId: string
         :returns: StrexMerchantId
@@ -255,6 +283,7 @@ class ApiClient:
 
     def SaveMerchant(self, merchant):
         """
+        PUT /api/strex/merchants/{merchantId}
         Creates/updates a merchant.
         :merchant: StrexMerchantId
         """
@@ -268,6 +297,7 @@ class ApiClient:
 
     def DeleteMerchant(self, merchantId):
         """
+        DELETE /api/strex/merchants/{merchantId}
         Deletes a merchant
         :merchantId: string
         """
@@ -276,7 +306,113 @@ class ApiClient:
 
         response = self.client.delete(self.STREX_MERCHANTS + "/" + merchantId)
         self.errorHandler.throwIfNotSuccess(response)
-    
+
+
+    def CreateOneTimePassword(self, oneTimePasswordInfo):
+        """
+        POST /api/strex/one-time-passwords
+        :return:
+        """
+
+        if oneTimePasswordInfo is None:
+            raise ValueError("invalid oneTimePasswordInfo")
+        if oneTimePasswordInfo.transactionId is None:
+            raise ValueError("invalid oneTimePasswordInfo.transactionId")
+        if oneTimePasswordInfo.merchantId is None:
+            raise ValueError("invalid oneTimePasswordInfo.merchantId")
+        if oneTimePasswordInfo.recipient is None:
+            raise ValueError("invalid oneTimePasswordInfo.recipient")
+        if oneTimePasswordInfo.sender is None:
+            raise ValueError("invalid oneTimePasswordInfo.sender")
+        if oneTimePasswordInfo.recurring is None:
+            raise ValueError("invalid oneTimePasswordInfo.recurring")
+
+        x = {
+            'transactionId': '79f35793-6d70-423c-a7f7-ae9fb1024f3b',
+            'merchantId': 'mer_test',
+            'recipient': '+4798079008',
+            'sender': 'Test',
+            'recurring': False,
+        }
+
+        # TODO getting error {'Message': "Failed to save one-time password '79f35793-6d70-423c-a7f7-ae9fb1024f3b'."}
+
+
+        response = self.client.post(self.STREX_ONE_TIME_PASSWORDS, x)
+        self.errorHandler.throwIfNotSuccess(response)
+        print(response.text)
+        # TODO return value and tidy off unittest
+
+
+    def GetOneTimePassword(self, transactionId):
+        """
+        GET /api/strex/one-time-passwords/{transactionId}
+
+        :param transactionId:
+        :return: OneTimePasswordInfo
+        """
+
+        response = self.client.get(self.STREX_ONE_TIME_PASSWORDS + '/' + transactionId)
+        self.errorHandler.throwIfNotSuccess(response)
+
+        oneTimePasswordInfo = OneTimePasswordInfo()
+        oneTimePasswordInfo.fromDict(response.json())
+
+        return oneTimePasswordInfo
+
+    def CreateTransaction(self):
+        """
+        POST /api/strex/transactions
+        :return:
+        """
+
+        junk = {
+          "created": "2018-11-02T12:00:00Z",
+          "invoiceText": "Thank you for your donation",
+          "lastModified": "2018-11-02T12:00:00Z",
+          "merchantId": "mer_test",
+          "price": 10,
+          "recipient": "+4798079008",
+          "serviceCode": "14002",
+          "shortNumber": "2001",
+          "transactionId": "8502b85f-fac2-47cc-8e55-a20ab8680427"
+        }
+
+        # TODO Tidy this up
+
+        response = self.client.post(self.STREX_TRANSACTIONS, junk)
+        self.errorHandler.throwIfNotSuccess(response)
+        print(response.text)
+
+        print(self._getIdFromHeader(response.headers))
+
+
+    def GetTransaction(self, transactionId):
+        """
+        GET /api/strex/transactions/{transactionId}
+        :return:
+        """
+
+        # TODO getting this error below
+        # {'Message': "System.Collections.Generic.KeyNotFoundException: The given key 'Sender' was not present in the dictionary.\r\n   at System.Collections.Generic.Dictionary`2.get_Item(TKey key)\r\n   at Target365.Services.TableStorageExtensions.ToStrexTransaction(DynamicTableEntity entity) in C:\\Target365\\Source\\Core\\NewApi\\Target365.Services\\TableStorageExtensions.cs:line 268\r\n   at Target365.Services.TableStorageStrexTransactionService.GetStrexTransactionAsync(String transactionId, Int64 accountId) in C:\\Target365\\Source\\Core\\NewApi\\Target365.Services\\Strex\\TableStorageStrexTransactionService.cs:line 235\r\n   at CoreApi.StrexTransactions.<>c__DisplayClass5_0.<<GetStrexTransaction>b__0>d.MoveNext() in C:\\Target365\\Source\\Core\\NewApi\\CoreApi\\Functions\\StrexTransactions.cs:line 133\r\n--- End of stack trace from previous location where exception was thrown ---\r\n   at CoreApi.ApplicationHelper.ExecuteFunctionAsync(ExecutionContext context, HttpRequestMessage request, Func`2 executor) in C:\\Target365\\Source\\Core\\NewApi\\CoreApi\\Utils\\ApplicationHelper.cs:line 40"}
+        # This seems strange as teh swagger documentation indicates there is no additioanl params passed except the transactionId
+
+
+        response = self.client.get(self.STREX_TRANSACTIONS + '/' + transactionId)
+        self.errorHandler.throwIfNotSuccess(response)
+        print(response.text)
+
+
+    def DeleteTransaction(self, transactionId):
+        """
+        DELETE /api/strex/transactions/{transactionId}
+        :param transactionId:
+        :return:
+        """
+        # TODO Need a transaction which I can delete
+        pass
+
+
     def _getIdFromHeader(self, headers):
         """
         Returns the newly created resource's identifier from the Locaion header

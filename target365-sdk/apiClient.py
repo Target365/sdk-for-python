@@ -235,31 +235,21 @@ class ApiClient:
 
     ###  InMessages controller  ###
 
-    # TODO I have written unit test for this already, but for some reason was getting this error
-    # Unauthorized - incorrect HMAC signature @ https://test.target365.io/api/in-messages/no-0000/79f35793-6d70-423c-a7f7-ae9fb1024f3b
     def GetInMessage(self, shortNumberId, transactionId):
         """
         GET /api/in-messages/{shortNumberId}/{transactionId}
         Gets and in-message
         :shortNumberId: string
         :transactionId: string
-        :return: InMessage TODO no inmessage class at the moment
+        :return: Dict
         """
         if transactionId is None:
             raise ValueError("transactionId")
 
         response = self.client.get(self.IN_MESSAGES + "/" + shortNumberId + "/" + transactionId)
+        self.errorHandler.throwIfNotSuccess(response)
 
-        print(response)
-
-        # if response.status_code == self.NOT_FOUND:
-        #     return None
-        #
-        # TODO this still coded to OutMessage
-        # self.errorHandler.throwIfNotSuccess(response)
-        # outMessage = OutMessage()
-        # outMessage.fromDict(response.json())
-        # return outMessage
+        return response.json()
 
 
     ###  StrexMerchantIds controller  ###

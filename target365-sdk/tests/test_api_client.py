@@ -129,15 +129,14 @@ def test_PrepareMsisdns(client):
     client.PrepareMsisdns(["+4798079008"])
 
 
+def test_GetInMessage(client, validShortNumberId, transactionId ):
+    in_message_info = client.GetInMessage(validShortNumberId, transactionId)
+    assert in_message_info['transactionId'] == transactionId
 
-def test_InMessages(client, validShortNumberId, transactionId ):
-    x = client.GetInMessage(validShortNumberId, transactionId)
-    print(x)
-    # TODO
-    pass
 
 def test_LookupShouldReturnResult(client):
     assert client.Lookup("+4798079008") is not None
+
 
 def test_StrexMerchantIdSequence(client, validShortNumberId):
     merchantIdIdentifier = "12341"
@@ -161,7 +160,6 @@ def test_StrexMerchantIdSequence(client, validShortNumberId):
     assert client.GetMerchant(merchantIdIdentifier) is None
 
 
-
 def test_CreateOneTimePassword(client, transactionId):
 
     oneTimePasswordInfo = OneTimePasswordInfo
@@ -180,7 +178,7 @@ def test_GetTimePassword(client, transactionId):
     assert oneTimePasswordInfo.transactionId == transactionId
 
 
-
+@pytest.mark.testnow
 def test_CreateTransaction(client):
     client.CreateTransaction()
 
@@ -208,7 +206,6 @@ def test_GetClientPublicKeys(client, apiKeyName):
     assert found_key == True
 
 
-@pytest.mark.testnow
 def test_GetClientPublicKey(client, apiKeyName):
     client_public_key = client.GetClientPublicKey(apiKeyName)
 

@@ -137,7 +137,7 @@ def test_GetInMessage(client, validShortNumberId, transactionId ):
 def test_LookupShouldReturnResult(client):
     assert client.Lookup("+4798079008") is not None
 
-
+@pytest.mark.testnow
 def test_StrexMerchantIdSequence(client, validShortNumberId):
     merchantIdIdentifier = "12341"
 
@@ -151,6 +151,7 @@ def test_StrexMerchantIdSequence(client, validShortNumberId):
     # get by id
     fetched = client.GetMerchant(merchantIdIdentifier)
     assert fetched is not None
+    print(fetched)
 
     # get all
     assert len(client.GetMerchantIds()) > 0
@@ -160,6 +161,8 @@ def test_StrexMerchantIdSequence(client, validShortNumberId):
     assert client.GetMerchant(merchantIdIdentifier) is None
 
 
+# TODO
+@pytest.mark.skip
 def test_CreateOneTimePassword(client, transactionId):
 
     oneTimePasswordInfo = OneTimePasswordInfo
@@ -178,11 +181,11 @@ def test_GetTimePassword(client, transactionId):
     assert oneTimePasswordInfo.transactionId == transactionId
 
 
-@pytest.mark.testnow
 def test_CreateTransaction(client):
     client.CreateTransaction()
 
-
+# TODO
+@pytest.mark.skip
 def test_GetTransaction(client, transactionId):
     client.GetTransaction(transactionId)
 
@@ -191,6 +194,8 @@ def test_DeleteTransaction(client, transactionId):
     client.DeleteTransaction(transactionId)
 
 
+# TODO
+@pytest.mark.skip
 def test_GetServerPublicKey(client):
     client.GetServerPublicKey('todo')
 

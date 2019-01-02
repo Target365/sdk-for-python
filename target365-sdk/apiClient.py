@@ -275,6 +275,7 @@ class ApiClient:
             raise ValueError("merchantId")
 
         response = self.client.get(self.STREX_MERCHANTS + "/" + merchantId)
+
         if response.status_code == self.NOT_FOUND:
             return None
 
@@ -295,7 +296,7 @@ class ApiClient:
             raise ValueError("merchantId")
 
         response = self.client.put(self.STREX_MERCHANTS + "/" + merchant.merchantId, merchant)
-        self.errorHandler.throwIfNotSuccess(response)
+        self.errorHandler.throwIfNotSuccess(response) # expecting http 204 response (no content)
 
     def DeleteMerchant(self, merchantId):
         """
@@ -385,8 +386,9 @@ class ApiClient:
 
         response = self.client.post(self.STREX_TRANSACTIONS, junk)
         self.errorHandler.throwIfNotSuccess(response)
-        print(response.text)
 
+        print('CreateTransaction')
+        print(response.text)
         print(self._getIdFromHeader(response.headers))
 
 
@@ -403,7 +405,6 @@ class ApiClient:
 
         response = self.client.get(self.STREX_TRANSACTIONS + '/' + transactionId)
         self.errorHandler.throwIfNotSuccess(response)
-        print(response.text)
 
 
     def DeleteTransaction(self, transactionId):
@@ -428,6 +429,7 @@ class ApiClient:
         response = self.client.get(self.SERVER_PUBLIC_KEYS + '/' + keyName)
         self.errorHandler.throwIfNotSuccess(response)
 
+        print('GetServerPublicKey')
         print(response)
 
 

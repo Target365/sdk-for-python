@@ -8,8 +8,6 @@ from models.lookup_result import LookupResult
 from models.keyword import Keyword
 from models.out_message import OutMessage
 from models.strex_merchant_id import StrexMerchantId
-from models.one_time_password_info import OneTimePasswordInfo
-
 
 @pytest.fixture
 def validShortNumberId():
@@ -18,6 +16,11 @@ def validShortNumberId():
 @pytest.fixture
 def transactionId():
     return '79f35793-6d70-423c-a7f7-ae9fb1024f3b'
+
+
+@pytest.fixture(scope="session")
+def randomTransactionId():
+    return str(uuid.uuid4())
 
 @pytest.fixture
 def apiKeyName():
@@ -137,7 +140,7 @@ def test_GetInMessage(client, validShortNumberId, transactionId ):
 def test_LookupShouldReturnResult(client):
     assert client.Lookup("+4798079008") is not None
 
-@pytest.mark.testnow
+
 def test_StrexMerchantIdSequence(client, validShortNumberId):
     merchantIdIdentifier = "12341"
 
@@ -161,18 +164,17 @@ def test_StrexMerchantIdSequence(client, validShortNumberId):
     assert client.GetMerchant(merchantIdIdentifier) is None
 
 
-# TODO
-@pytest.mark.skip
-def test_CreateOneTimePassword(client, transactionId):
+def test_CreateOneTimePassword(client, randomTransactionId):
 
-    oneTimePasswordInfo = OneTimePasswordInfo
-    oneTimePasswordInfo.transactionId = transactionId
-    oneTimePasswordInfo.merchantId = 'mer_test'
-    oneTimePasswordInfo.recipient = '+4798079008'
-    oneTimePasswordInfo.sender = 'Test'
-    oneTimePasswordInfo.recurring = False
+    oneTimePasswordData = {
+        'transactionId': randomTransactionId,
+        'merchantId': 'mer_test',
+        'recipient': '+4798079008',
+        'sender': 'Test',
+        'recurring': False
+    }
 
-    client.CreateOneTimePassword(oneTimePasswordInfo)
+    client.CreateOneTimePassword(oneTimePasswordData)
 
 
 def test_GetTimePassword(client, transactionId):
@@ -181,23 +183,31 @@ def test_GetTimePassword(client, transactionId):
     assert oneTimePasswordInfo.transactionId == transactionId
 
 
-def test_CreateTransaction(client):
-    client.CreateTransaction()
+def test_TransactionSequence(client, randomTransactionId):
+    transactionData = {
+        "created": "2018-11-02T12:00:00Z",
+        "invoiceText": "Thank you for your donation",
+        "lastModified": "2018-11-02T12:00:00Z",
+        "merchantId": "mer_test",
+        "price": 10,
+        "recipient": "+4798079008",
+        "serviceCode": "14002",
+        "shortNumber": "2001",
+        "transactionId": randomTransactionId
+    }
 
-# TODO
-@pytest.mark.skip
-def test_GetTransaction(client, transactionId):
-    client.GetTransaction(transactionId)
+    client.CreateTransaction(transactionData)
+
+    transactionData = client.GetTransaction(randomTransactionId)
+    assert transactionData['transactionId'] == randomTransactionId
+
+    client.DeleteTransaction(randomTransactionId)
 
 
-def test_DeleteTransaction(client, transactionId):
-    client.DeleteTransaction(transactionId)
-
-
-# TODO
-@pytest.mark.skip
 def test_GetServerPublicKey(client):
-    client.GetServerPublicKey('todo')
+    responseData = client.GetServerPublicKey('2017-11-17')
+
+    assert responseData['accountId'] == 8
 
 
 def test_GetClientPublicKeys(client, apiKeyName):

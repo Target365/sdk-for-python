@@ -4,7 +4,6 @@ from models.lookup_result import LookupResult
 from models.keyword import Keyword
 from models.out_message import OutMessage
 from models.strex_merchant_id import StrexMerchantId
-from models.one_time_password_info import OneTimePasswordInfo
 
 
 name = "target365-sdk"
@@ -311,40 +310,27 @@ class ApiClient:
         self.errorHandler.throwIfNotSuccess(response)
 
 
-    def CreateOneTimePassword(self, oneTimePasswordInfo):
+    def CreateOneTimePassword(self, oneTimePasswordData):
         """
         POST /api/strex/one-time-passwords
         :return:
         """
 
-        if oneTimePasswordInfo is None:
-            raise ValueError("invalid oneTimePasswordInfo")
-        if oneTimePasswordInfo.transactionId is None:
-            raise ValueError("invalid oneTimePasswordInfo.transactionId")
-        if oneTimePasswordInfo.merchantId is None:
-            raise ValueError("invalid oneTimePasswordInfo.merchantId")
-        if oneTimePasswordInfo.recipient is None:
-            raise ValueError("invalid oneTimePasswordInfo.recipient")
-        if oneTimePasswordInfo.sender is None:
-            raise ValueError("invalid oneTimePasswordInfo.sender")
-        if oneTimePasswordInfo.recurring is None:
-            raise ValueError("invalid oneTimePasswordInfo.recurring")
+        if oneTimePasswordData is None:
+            raise ValueError("invalid oneTimePasswordData")
+        if oneTimePasswordData['transactionId'] is None:
+            raise ValueError("invalid oneTimePasswordData.transactionId")
+        if oneTimePasswordData['merchantId'] is None:
+            raise ValueError("invalid oneTimePasswordData.merchantId")
+        if oneTimePasswordData['recipient'] is None:
+            raise ValueError("invalid oneTimePasswordData.recipient")
+        if oneTimePasswordData['sender'] is None:
+            raise ValueError("invalid oneTimePasswordData.sender")
+        if oneTimePasswordData['recurring'] is None:
+            raise ValueError("invalid oneTimePasswordData.recurring")
 
-        x = {
-            'transactionId': '79f35793-6d70-423c-a7f7-ae9fb1024f3b',
-            'merchantId': 'mer_test',
-            'recipient': '+4798079008',
-            'sender': 'Test',
-            'recurring': False,
-        }
-
-        # TODO getting error {'Message': "Failed to save one-time password '79f35793-6d70-423c-a7f7-ae9fb1024f3b'."}
-
-
-        response = self.client.post(self.STREX_ONE_TIME_PASSWORDS, x)
+        response = self.client.post(self.STREX_ONE_TIME_PASSWORDS, oneTimePasswordData)
         self.errorHandler.throwIfNotSuccess(response)
-        print(response.text)
-        # TODO return value and tidy off unittest
 
 
     def GetOneTimePassword(self, transactionId):
@@ -358,38 +344,19 @@ class ApiClient:
         response = self.client.get(self.STREX_ONE_TIME_PASSWORDS + '/' + transactionId)
         self.errorHandler.throwIfNotSuccess(response)
 
-        oneTimePasswordInfo = OneTimePasswordInfo()
-        oneTimePasswordInfo.fromDict(response.json())
-
-        return oneTimePasswordInfo
+        return response.json()
 
 
-    def CreateTransaction(self):
+    def CreateTransaction(self, transactionData):
         """
         POST /api/strex/transactions
         :return:
         """
 
-        junk = {
-          "created": "2018-11-02T12:00:00Z",
-          "invoiceText": "Thank you for your donation",
-          "lastModified": "2018-11-02T12:00:00Z",
-          "merchantId": "mer_test",
-          "price": 10,
-          "recipient": "+4798079008",
-          "serviceCode": "14002",
-          "shortNumber": "2001",
-          "transactionId": "8502b85f-fac2-47cc-8e55-a20ab8680427"
-        }
-
-        # TODO Tidy this up
-
-        response = self.client.post(self.STREX_TRANSACTIONS, junk)
+        response = self.client.post(self.STREX_TRANSACTIONS, transactionData)
         self.errorHandler.throwIfNotSuccess(response)
 
-        print('CreateTransaction')
-        print(response.text)
-        print(self._getIdFromHeader(response.headers))
+        return self._getIdFromHeader(response.headers)
 
 
     def GetTransaction(self, transactionId):
@@ -398,13 +365,10 @@ class ApiClient:
         :return:
         """
 
-        # TODO getting this error below
-        # {'Message': "System.Collections.Generic.KeyNotFoundException: The given key 'Sender' was not present in the dictionary.\r\n   at System.Collections.Generic.Dictionary`2.get_Item(TKey key)\r\n   at Target365.Services.TableStorageExtensions.ToStrexTransaction(DynamicTableEntity entity) in C:\\Target365\\Source\\Core\\NewApi\\Target365.Services\\TableStorageExtensions.cs:line 268\r\n   at Target365.Services.TableStorageStrexTransactionService.GetStrexTransactionAsync(String transactionId, Int64 accountId) in C:\\Target365\\Source\\Core\\NewApi\\Target365.Services\\Strex\\TableStorageStrexTransactionService.cs:line 235\r\n   at CoreApi.StrexTransactions.<>c__DisplayClass5_0.<<GetStrexTransaction>b__0>d.MoveNext() in C:\\Target365\\Source\\Core\\NewApi\\CoreApi\\Functions\\StrexTransactions.cs:line 133\r\n--- End of stack trace from previous location where exception was thrown ---\r\n   at CoreApi.ApplicationHelper.ExecuteFunctionAsync(ExecutionContext context, HttpRequestMessage request, Func`2 executor) in C:\\Target365\\Source\\Core\\NewApi\\CoreApi\\Utils\\ApplicationHelper.cs:line 40"}
-        # This seems strange as teh swagger documentation indicates there is no additioanl params passed except the transactionId
-
-
         response = self.client.get(self.STREX_TRANSACTIONS + '/' + transactionId)
         self.errorHandler.throwIfNotSuccess(response)
+
+        return response.json()
 
 
     def DeleteTransaction(self, transactionId):
@@ -413,14 +377,13 @@ class ApiClient:
         :param transactionId:
         :return:
         """
-        # TODO Need a transaction which I can delete
-        pass
+        response = self.client.delete(self.STREX_TRANSACTIONS + '/' + transactionId)
+        self.errorHandler.throwIfNotSuccess(response)
 
 
     ### PublicKey controller  ###
 
     def GetServerPublicKey(self, keyName):
-        # TODO
         """
         GET /api/server/public-keys/{keyName}
         :param keyName:
@@ -429,8 +392,7 @@ class ApiClient:
         response = self.client.get(self.SERVER_PUBLIC_KEYS + '/' + keyName)
         self.errorHandler.throwIfNotSuccess(response)
 
-        print('GetServerPublicKey')
-        print(response)
+        return response.json()
 
 
     def GetClientPublicKeys(self):

@@ -7,7 +7,7 @@ setuptools.setup(
     name="target365-sdk",
     version="1.0.0",
     author="Target365",
-    author_email="author@example.com",
+    author_email="support@target365.no",
     description="Enables integration with Target365 online services.",
     long_description=long_description,
     long_description_content_type="text/markdown",

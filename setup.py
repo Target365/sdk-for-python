@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="target365-sdk",
-    version="1.0.1",
+    version="1.0.0",
     author="Target365",
     author_email="support@target365.no",
     description="Enables integration with Target365 online services.",

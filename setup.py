@@ -11,7 +11,7 @@ setuptools.setup(
     description="Enables integration with Target365 online services.",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/target365/target365-sdk-python",
+    url="https://github.com/Target365/sdk-for-python",
     packages=setuptools.find_packages(),
     install_requires=[
           'requests',

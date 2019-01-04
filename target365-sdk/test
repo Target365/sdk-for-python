@@ -10,14 +10,14 @@ cd tests
 if [ -z "$1" ]
 then
     echo "running tests except 'skip'"   # tests flagged as skip are skipped by default
-    py.test -v --capture=no
+    py.test -v -x --capture=no
 fi
 
 
 if [ "$1" = "testnow" ]
 then
     echo "Running 'testnow' only"
-    py.test -v --capture=no -m testnow
+    py.test -v -x --capture=no -m testnow
 fi
 
 

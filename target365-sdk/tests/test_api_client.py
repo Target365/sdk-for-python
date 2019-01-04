@@ -4,7 +4,6 @@ import uuid
 from datetime import datetime
 from datetime import timedelta
 from apiClient import ApiClient
-from models.lookup_result import LookupResult
 from models.keyword import Keyword
 from models.out_message import OutMessage
 from models.strex_merchant_id import StrexMerchantId
@@ -154,7 +153,6 @@ def test_StrexMerchantIdSequence(client, validShortNumberId):
     # get by id
     fetched = client.GetMerchant(merchantIdIdentifier)
     assert fetched is not None
-    print(fetched)
 
     # get all
     assert len(client.GetMerchantIds()) > 0
@@ -180,7 +178,7 @@ def test_CreateOneTimePassword(client, randomTransactionId):
 def test_GetTimePassword(client, transactionId):
     oneTimePasswordInfo = client.GetOneTimePassword(transactionId)
 
-    assert oneTimePasswordInfo.transactionId == transactionId
+    assert oneTimePasswordInfo['transactionId'] == transactionId
 
 
 def test_TransactionSequence(client, randomTransactionId):

@@ -5,10 +5,10 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="target365-sdk",
-    version="0.0.1",
+    version="1.0.0",
     author="Target365",
     author_email="author@example.com",
-    description="This client library enables working with the Target365 online services which includes address lookup, sending and receiving text messages and more.",
+    description="Enables integration with Target365 online services.",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/target365/target365-sdk-python",

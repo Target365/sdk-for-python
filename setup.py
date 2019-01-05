@@ -4,12 +4,12 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="target365-sdk",
+    name="target365sdk",
     version="1.0.0",
     author="Target365",
     author_email="support@target365.no",
-    description="Enables integration with Target365 online services.",
-    long_description=long_description,
+    description="Target365 SDK",
+    long_description="Enables integration with Target365 online services.",
     long_description_content_type="text/markdown",
     url="https://github.com/Target365/sdk-for-python",
     packages=setuptools.find_packages(),

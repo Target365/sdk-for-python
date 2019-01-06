@@ -1,27 +1,27 @@
 class OutMessage:
-    def fromDict(self, dictionaryItem):
+    def from_dict(self, dictionary_item):
 
-        self.transactionId = dictionaryItem["transactionId"]
+        self.transactionId = dictionary_item["transactionId"]
         # self.correlationId = dictionaryItem["correlationId"]
         # self.keywordId = dictionaryItem["keywordId"]
-        self.sender = dictionaryItem["sender"]
-        self.recipient = dictionaryItem["recipient"]
-        self.content = dictionaryItem["content"]
-        self.sendTime = dictionaryItem["sendTime"]
-        self.timeToLive = dictionaryItem["timeToLive"]
-        self.priority = dictionaryItem["priority"]
-        self.deliveryMode = dictionaryItem["deliveryMode"]
+        self.sender = dictionary_item["sender"]
+        self.recipient = dictionary_item["recipient"]
+        self.content = dictionary_item["content"]
+        self.sendTime = dictionary_item["sendTime"]
+        self.timeToLive = dictionary_item["timeToLive"]
+        self.priority = dictionary_item["priority"]
+        self.deliveryMode = dictionary_item["deliveryMode"]
         
         # only used for STREX messages
-        self.merchantId = dictionaryItem.get("merchantId", None)
-        self.serviceCode = dictionaryItem.get("serviceCode", None)
-        self.invoiceText = dictionaryItem.get("invoiceText", None)
-        self.price = dictionaryItem.get("price", None)
+        self.merchantId = dictionary_item.get("merchantId", None)
+        self.serviceCode = dictionary_item.get("serviceCode", None)
+        self.invoiceText = dictionary_item.get("invoiceText", None)
+        self.price = dictionary_item.get("price", None)
         
         # self.deliveryReportUrl = dictionaryItem["deliveryReportUrl"]
-        self.lastModified = dictionaryItem["lastModified"]
-        self.created = dictionaryItem["created"]
-        self.statusCode = dictionaryItem["statusCode"]
+        self.lastModified = dictionary_item["lastModified"]
+        self.created = dictionary_item["created"]
+        self.statusCode = dictionary_item["statusCode"]
         # self.delivered = dictionaryItem["delivered"]
         # self.billed = dictionaryItem["billed"]
-        self.tags = dictionaryItem["tags"]
+        self.tags = dictionary_item["tags"]

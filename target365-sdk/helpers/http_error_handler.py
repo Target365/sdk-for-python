@@ -1,9 +1,9 @@
 class HttpErrorHandler:
-  def throwIfNotSuccess(self, response):  
+  def throw_if_not_success(self, response):
     if (response.status_code < 200) or (response.status_code >= 300):
-      self.throwError(response)
+      self.throw_error(response)
 
-  def throwError(self, response):
+  def throw_error(self, response):
     message = ""
     try:
       message = response.json()

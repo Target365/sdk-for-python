@@ -23,25 +23,25 @@ class ApiClient:
 
     NOT_FOUND = 404
 
-    def __init__(self, baseUri, keyName, privateKey):
-        self.client = HttpClient(baseUri, keyName, privateKey)
+    def __init__(self, base_uri, key_name, private_key):
+        self.client = HttpClient(base_uri, key_name, private_key)
         self.errorHandler = HttpErrorHandler()
 
     ###  Ping controller  ###
 
-    def Ping(self):
+    def ping(self):
         """
         GET /api/ping
         Pings the service and returns a hello message
         :return: return description
         """
         response = self.client.get(self.PING)
-        self.errorHandler.throwIfNotSuccess(response)
+        self.errorHandler.throw_if_not_success(response)
         return response.text # returns the string "pong"
 
     ###  Lookup controller  ###
 
-    def Lookup(self, msisdn):
+    def loopup(self, msisdn):
         """
         GET /api/lookup
         Looks up address info on a mobile phone number.
@@ -55,14 +55,14 @@ class ApiClient:
         response = self.client.getWithParams(self.LOOKUP, payload)
         if response.status_code == self.NOT_FOUND:
             return None
-        self.errorHandler.throwIfNotSuccess(response)
+        self.errorHandler.throw_if_not_success(response)
         lookupResult = LookupResult()
-        lookupResult.fromDict(response.json())
+        lookupResult.from_dict(response.json())
         return lookupResult
 
     ###  Keyword controller  ###
 
-    def CreateKeyword(self, keyword):
+    def create_keyword(self, keyword):
         """
         POST /api/keywords
         Creates a new keyword.
@@ -72,19 +72,19 @@ class ApiClient:
         if keyword is None:
             raise ValueError("keyword")
         response = self.client.post(self.KEYWORDS, keyword)
-        self.errorHandler.throwIfNotSuccess(response)
+        self.errorHandler.throw_if_not_success(response)
 
-        return self._getIdFromHeader(response.headers)
+        return self._get_id_from_header(response.headers)
 
-    def GetAllKeywords(self, shortNumberId=None, keyword=None, mode=None, tag=None):
+    def get_all_keywords(self, short_number_id=None, keyword=None, mode=None, tag=None):
         """
         GET /api/keywords
         Gets all keywords.
         :return: Keyword[]
         """
         params = {}
-        if shortNumberId is not None:
-            params["shortNumberId"] = shortNumberId
+        if short_number_id is not None:
+            params["shortNumberId"] = short_number_id
         if keyword is not None:
             params["keywordText"] = keyword
         if mode is not None:
@@ -93,30 +93,30 @@ class ApiClient:
             params["tag"] = tag
 
         response = self.client.getWithParams(self.KEYWORDS, params)
-        self.errorHandler.throwIfNotSuccess(response)
-        return Keyword().fromResponseList(response.json())
+        self.errorHandler.throw_if_not_success(response)
+        return Keyword().from_response_list(response.json())
 
-    def GetKeyword(self, keywordId):
+    def get_keyword(self, keyword_id):
         """
         GET /api/keywords/{keywordId}
         Gets a keyword.
         :keywordId: string
         :return: Keyword
         """
-        if keywordId is None:
+        if keyword_id is None:
             raise ValueError("keywordId")
 
-        response = self.client.get(self.KEYWORDS + "/" + keywordId)
+        response = self.client.get(self.KEYWORDS + "/" + keyword_id)
         if response.status_code == self.NOT_FOUND:
             return None
 
-        self.errorHandler.throwIfNotSuccess(response)
+        self.errorHandler.throw_if_not_success(response)
         
         keyword = Keyword()
-        keyword.fromDict(response.json())
+        keyword.from_dict(response.json())
         return keyword
 
-    def UpdateKeyword(self, keyword):
+    def update_keyword(self, keyword):
         """
         PUT /api/keywords/{keywordId}
         Updates a keyword
@@ -130,23 +130,23 @@ class ApiClient:
         response = self.client.put(
             self.KEYWORDS + "/" + keyword.keywordId, keyword)
 
-        self.errorHandler.throwIfNotSuccess(response)
+        self.errorHandler.throw_if_not_success(response)
 
-    def DeleteKeyword(self, keywordId):
+    def delete_keyword(self, keyword_id):
         """
         DELETE /api/keywords/{keywordId}
         Deletes a keyword
         :keywordId: string
         """
-        if keywordId is None:
+        if keyword_id is None:
             raise ValueError("keywordId")
 
-        response = self.client.delete(self.KEYWORDS + "/" + keywordId)
-        self.errorHandler.throwIfNotSuccess(response)
+        response = self.client.delete(self.KEYWORDS + "/" + keyword_id)
+        self.errorHandler.throw_if_not_success(response)
 
     ###  OutMessage controller  ###
 
-    def PrepareMsisdns(self, msisdns):
+    def prepare_msisdns(self, msisdns):
         """
         POST /api/prepare-msisdns
         MSISDNs to prepare as a string array
@@ -155,9 +155,9 @@ class ApiClient:
         if msisdns is None:
             raise ValueError("msisdns")
         response = self.client.post(self.PREPARE_MSISDNS, msisdns)
-        self.errorHandler.throwIfNotSuccess(response)
+        self.errorHandler.throw_if_not_success(response)
 
-    def CreateOutMessage(self, message):
+    def create_out_message(self, message):
         """
         POST /api/out-messages
         Creates a new out-message
@@ -167,11 +167,11 @@ class ApiClient:
             raise ValueError("message")
 
         response = self.client.post(self.OUT_MESSAGES, message)
-        self.errorHandler.throwIfNotSuccess(response)
+        self.errorHandler.throw_if_not_success(response)
 
-        return self._getIdFromHeader(response.headers)
+        return self._get_id_from_header(response.headers)
 
-    def CreateOutMessageBatch(self, messages):
+    def create_out_message_batch(self, messages):
         """
         POST /api/out-messages/batch
         Creates a new out-message batch.
@@ -181,29 +181,29 @@ class ApiClient:
             raise ValueError("messages")
 
         response = self.client.post(self.OUT_MESSAGES + "/batch", messages)
-        self.errorHandler.throwIfNotSuccess(response)
+        self.errorHandler.throw_if_not_success(response)
 
-    def GetOutMessage(self, transactionId):
+    def get_out_message(self, transaction_id):
         """
         GET /api/out-messages/batch/{transactionId}
         Gets and out-message
         :transactionId: string
         :return: OutMessage
         """
-        if transactionId is None:
+        if transaction_id is None:
             raise ValueError("transactionId")
 
-        response = self.client.get(self.OUT_MESSAGES + "/" + transactionId)
+        response = self.client.get(self.OUT_MESSAGES + "/" + transaction_id)
         if response.status_code == self.NOT_FOUND:
             return None
 
-        self.errorHandler.throwIfNotSuccess(response)
+        self.errorHandler.throw_if_not_success(response)
         outMessage = OutMessage()
-        outMessage.fromDict(response.json())
+        outMessage.from_dict(response.json())
         return outMessage
 
 
-    def UpdateOutMessage(self, message):
+    def update_out_message(self, message):
         """
         PUT /api/out-messages/batch/{transactionId}
         Updates a future scheduled out-message.
@@ -216,25 +216,25 @@ class ApiClient:
 
         response = self.client.put(
             self.OUT_MESSAGES + "/" + message.transactionId, message)
-        self.errorHandler.throwIfNotSuccess(response)
+        self.errorHandler.throw_if_not_success(response)
 
 
-    def DeleteOutMessage(self, transactionId):
+    def delete_out_message(self, transaction_id):
         """
         DELETE /api/out-messages/batch/{transactionId}
         Deletes a future sheduled out-message.
         :transactionId: string
         """
-        if transactionId is None:
+        if transaction_id is None:
             raise ValueError("transactionId")
 
-        response = self.client.delete(self.OUT_MESSAGES + "/" + transactionId)
-        self.errorHandler.throwIfNotSuccess(response)
+        response = self.client.delete(self.OUT_MESSAGES + "/" + transaction_id)
+        self.errorHandler.throw_if_not_success(response)
 
 
     ###  InMessages controller  ###
 
-    def GetInMessage(self, shortNumberId, transactionId):
+    def get_in_message(self, shortNumberId, transaction_id):
         """
         GET /api/in-messages/{shortNumberId}/{transactionId}
         Gets and in-message
@@ -242,48 +242,48 @@ class ApiClient:
         :transactionId: string
         :return: Dict
         """
-        if transactionId is None:
+        if transaction_id is None:
             raise ValueError("transactionId")
 
-        response = self.client.get(self.IN_MESSAGES + "/" + shortNumberId + "/" + transactionId)
-        self.errorHandler.throwIfNotSuccess(response)
+        response = self.client.get(self.IN_MESSAGES + "/" + shortNumberId + "/" + transaction_id)
+        self.errorHandler.throw_if_not_success(response)
 
         return response.json()
 
 
     ###  StrexMerchantIds controller  ###
 
-    def GetMerchantIds(self):
+    def get_merchant_ids(self):
         """
         GET /api/strex/merchants
         Gets all merchant ids.
         :return: StrexMerchantId[]
         """
         response = self.client.get(self.STREX_MERCHANTS)
-        self.errorHandler.throwIfNotSuccess(response)
-        return StrexMerchantId().fromResponseList(response.json())
+        self.errorHandler.throw_if_not_success(response)
+        return StrexMerchantId().from_response_list(response.json())
 
-    def GetMerchant(self, merchantId):
+    def get_merchant(self, merchant_id):
         """
         GET /api/strex/merchants/{merchantId}
         Gets a merchant.
         :merchantId: string
         :returns: StrexMerchantId
         """
-        if merchantId is None:
+        if merchant_id is None:
             raise ValueError("merchantId")
 
-        response = self.client.get(self.STREX_MERCHANTS + "/" + merchantId)
+        response = self.client.get(self.STREX_MERCHANTS + "/" + merchant_id)
 
         if response.status_code == self.NOT_FOUND:
             return None
 
-        self.errorHandler.throwIfNotSuccess(response)
+        self.errorHandler.throw_if_not_success(response)
         strexMerchantId = StrexMerchantId()
-        strexMerchantId.fromDict(response.json())
+        strexMerchantId.from_dict(response.json())
         return strexMerchantId
 
-    def SaveMerchant(self, merchant):
+    def save_merchant(self, merchant):
         """
         PUT /api/strex/merchants/{merchantId}
         Creates/updates a merchant.
@@ -295,9 +295,9 @@ class ApiClient:
             raise ValueError("merchantId")
 
         response = self.client.put(self.STREX_MERCHANTS + "/" + merchant.merchantId, merchant)
-        self.errorHandler.throwIfNotSuccess(response) # expecting http 204 response (no content)
+        self.errorHandler.throw_if_not_success(response) # expecting http 204 response (no content)
 
-    def DeleteMerchant(self, merchantId):
+    def delete_merchant(self, merchantId):
         """
         DELETE /api/strex/merchants/{merchantId}
         Deletes a merchant
@@ -307,10 +307,10 @@ class ApiClient:
             raise ValueError("merchantId")
 
         response = self.client.delete(self.STREX_MERCHANTS + "/" + merchantId)
-        self.errorHandler.throwIfNotSuccess(response)
+        self.errorHandler.throw_if_not_success(response)
 
 
-    def CreateOneTimePassword(self, oneTimePasswordData):
+    def create_one_time_password(self, oneTimePasswordData):
         """
         POST /api/strex/one-time-passwords
         :return:
@@ -330,10 +330,10 @@ class ApiClient:
             raise ValueError("invalid oneTimePasswordData.recurring")
 
         response = self.client.post(self.STREX_ONE_TIME_PASSWORDS, oneTimePasswordData)
-        self.errorHandler.throwIfNotSuccess(response)
+        self.errorHandler.throw_if_not_success(response)
 
 
-    def GetOneTimePassword(self, transactionId):
+    def get_one_time_password(self, transactionId):
         """
         GET /api/strex/one-time-passwords/{transactionId}
 
@@ -342,91 +342,91 @@ class ApiClient:
         """
 
         response = self.client.get(self.STREX_ONE_TIME_PASSWORDS + '/' + transactionId)
-        self.errorHandler.throwIfNotSuccess(response)
+        self.errorHandler.throw_if_not_success(response)
 
         return response.json()
 
 
-    def CreateTransaction(self, transactionData):
+    def create_transaction(self, transactionData):
         """
         POST /api/strex/transactions
         :return:
         """
 
         response = self.client.post(self.STREX_TRANSACTIONS, transactionData)
-        self.errorHandler.throwIfNotSuccess(response)
+        self.errorHandler.throw_if_not_success(response)
 
-        return self._getIdFromHeader(response.headers)
+        return self._get_id_from_header(response.headers)
 
 
-    def GetTransaction(self, transactionId):
+    def get_transaction(self, transactionId):
         """
         GET /api/strex/transactions/{transactionId}
         :return:
         """
 
         response = self.client.get(self.STREX_TRANSACTIONS + '/' + transactionId)
-        self.errorHandler.throwIfNotSuccess(response)
+        self.errorHandler.throw_if_not_success(response)
 
         return response.json()
 
 
-    def DeleteTransaction(self, transactionId):
+    def delete_transaction(self, transactionId):
         """
         DELETE /api/strex/transactions/{transactionId}
         :param transactionId:
         :return:
         """
         response = self.client.delete(self.STREX_TRANSACTIONS + '/' + transactionId)
-        self.errorHandler.throwIfNotSuccess(response)
+        self.errorHandler.throw_if_not_success(response)
 
 
     ### PublicKey controller  ###
 
-    def GetServerPublicKey(self, keyName):
+    def get_server_public_key(self, keyName):
         """
         GET /api/server/public-keys/{keyName}
         :param keyName:
         :return:
         """
         response = self.client.get(self.SERVER_PUBLIC_KEYS + '/' + keyName)
-        self.errorHandler.throwIfNotSuccess(response)
+        self.errorHandler.throw_if_not_success(response)
 
         return response.json()
 
 
-    def GetClientPublicKeys(self):
+    def get_client_public_keys(self):
         """
         GET /api/client/public-keys
         :return: List
         """
         response = self.client.get(self.CLIENT_PUBLIC_KEYS)
-        self.errorHandler.throwIfNotSuccess(response)
+        self.errorHandler.throw_if_not_success(response)
 
         return response.json()
 
 
-    def GetClientPublicKey(self, keyName):
+    def get_client_public_key(self, keyName):
         """
         GET /api/client/public-keys/{keyName}
         :return: Dict
         """
         response = self.client.get(self.CLIENT_PUBLIC_KEYS + '/' + keyName)
-        self.errorHandler.throwIfNotSuccess(response)
+        self.errorHandler.throw_if_not_success(response)
 
         return response.json()
 
 
-    def DeleteClientPublicKey(self, keyName):
+    def delete_client_public_key(self, keyName):
         """
         DELETE /api/client/public-keys/{keyName}
         :return:
         """
         response = self.client.delete(self.CLIENT_PUBLIC_KEYS + '/' + keyName)
-        self.errorHandler.throwIfNotSuccess(response)
+        self.errorHandler.throw_if_not_success(response)
 
 
-    def _getIdFromHeader(self, headers):
+    def _get_id_from_header(self, headers):
         """
         Returns the newly created resource's identifier from the Locaion header
         :returns: resource identifier

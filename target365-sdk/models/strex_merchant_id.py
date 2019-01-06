@@ -1,14 +1,14 @@
 class StrexMerchantId:
-    def fromDict(self, dict):
-        self.merchantId = dict["merchantId"]
-        self.shortNumberId = dict["shortNumberId"]
-        self.password = dict["password"]
+    def from_dict(self, dictionary_item):
+        self.merchantId = dictionary_item["merchantId"]
+        self.shortNumberId = dictionary_item["shortNumberId"]
+        self.password = dictionary_item["password"]
     
-    def fromResponseList(self, listOfStrexMerchantIds):
+    def from_response_list(self, list_of_strex_merchant_ids):
         items = []
-        for item in listOfStrexMerchantIds:
+        for item in list_of_strex_merchant_ids:
             strexMerchantId = StrexMerchantId()
-            strexMerchantId.fromDict(item)
+            strexMerchantId.from_dict(item)
             items.append(strexMerchantId)
 
         return items

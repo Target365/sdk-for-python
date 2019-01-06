@@ -1,6 +1,6 @@
 class Keyword:
 
-    def fromDict(self, dictionaryItem):
+    def from_dict(self, dictionaryItem):
         self.keywordId = dictionaryItem["keywordId"]
         self.shortNumberId = dictionaryItem["shortNumberId"]
         self.keywordText = dictionaryItem["keywordText"]
@@ -12,11 +12,11 @@ class Keyword:
         self.tags = dictionaryItem["tags"]
         self.customProperties = dictionaryItem.get("customProperties", None)
 
-    def fromResponseList(self, listOfKeywords):
+    def from_response_list(self, list_of_keywords):
         items = []
-        for item in listOfKeywords:
+        for item in list_of_keywords:
             keyword = Keyword()
-            keyword.fromDict(item)
+            keyword.from_dict(item)
             items.append(keyword)
 
         return items

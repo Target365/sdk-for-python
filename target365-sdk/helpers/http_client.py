@@ -19,48 +19,48 @@ class HttpClient:
             binascii.unhexlify(self.privateKey), curve=ecdsa.NIST256p)
 
     def get(self, path):
-        return requests.get(self._buildUrl(path), headers=self._getAuthHeader("get", self._buildUrl(path)))
+        return requests.get(self._build_url(path), headers=self._get_auth_header("get", self._build_url(path)))
 
     def getWithParams(self, path, queryParams):
-        url = self._buildUrl(path)
+        url = self._build_url(path)
         if len(queryParams.keys()) > 0:
             url += "?"
 
         absoluteUri = (url + urllib.parse.urlencode(queryParams)).lower()
-        return requests.get(self._buildUrl(path), params=queryParams, headers=self._getAuthHeader("get", absoluteUri))
+        return requests.get(self._build_url(path), params=queryParams, headers=self._get_auth_header("get", absoluteUri))
 
     def post(self, path, body):
         jsonEncoded = jsonpickle.encode(body)
-        return requests.post(self._buildUrl(path), data=jsonEncoded, headers=self._getAuthHeader("post", self._buildUrl(path), jsonEncoded))
+        return requests.post(self._build_url(path), data=jsonEncoded, headers=self._get_auth_header("post", self._build_url(path), jsonEncoded))
 
     def put(self, path, body):
         jsonEncoded = jsonpickle.encode(body)
-        return requests.put(self._buildUrl(path), data=jsonEncoded, headers=self._getAuthHeader("put", self._buildUrl(path), jsonEncoded))
+        return requests.put(self._build_url(path), data=jsonEncoded, headers=self._get_auth_header("put", self._build_url(path), jsonEncoded))
 
     def delete(self, path):
-        return requests.delete(self._buildUrl(path), headers=self._getAuthHeader("delete", self._buildUrl(path)))
+        return requests.delete(self._build_url(path), headers=self._get_auth_header("delete", self._build_url(path)))
 
-    def _buildUrl(self, path):
+    def _build_url(self, path):
         return (self.baseUri + path).lower()
 
-    def _getAuthHeader(self, method, uri, body=None):
-        signature = self._getSignature(method, uri, body)
+    def _get_auth_header(self, method, uri, body=None):
+        signature = self._get_signature(method, uri, body)
         return {"Authorization": "ECDSA " + signature}
 
-    def _getSignature(self, method, uri, body=None):
+    def _get_signature(self, method, uri, body=None):
         timestamp = int(time.time())
         nounce = uuid.uuid4()
 
-        contentHash = ""
+        content_hash = ""
         if body is not None:
             content = body
             signature = hashlib.sha256(content.encode("utf-8")).digest()
-            base64Encoded = base64.b64encode(signature)
-            contentHash = base64Encoded.decode("utf-8")
+            base64_encoded = base64.b64encode(signature)
+            content_hash = base64_encoded.decode("utf-8")
 
-        message = method + uri + str(timestamp) + str(nounce) + contentHash
-        signatureString = base64.b64encode(self.publicKey.sign(
+        message = method + uri + str(timestamp) + str(nounce) + content_hash
+        signature_string = base64.b64encode(self.publicKey.sign(
             message.encode("utf-8"), hashfunc=hashlib.sha256))
-        theSignature = self.keyName + ":" + str(timestamp) + ":" + str(nounce) + ":" + signatureString.decode("utf-8")
+        the_signature = self.keyName + ":" + str(timestamp) + ":" + str(nounce) + ":" + signature_string.decode("utf-8")
 
-        return theSignature
+        return the_signature

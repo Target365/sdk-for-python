@@ -11,37 +11,52 @@ import jsonpickle
 
 
 class HttpClient:
-    def __init__(self, baseUri, keyName, privateKey):
-        self.keyName = keyName
-        self.privateKey = privateKey
-        self.baseUri = baseUri
+    def __init__(self, base_uri, key_name, private_key):
+        self.keyName = key_name
+        self.privateKey = private_key
+        self.base_uri = base_uri
         self.publicKey = ecdsa.SigningKey.from_string(
             binascii.unhexlify(self.privateKey), curve=ecdsa.NIST256p)
 
     def get(self, path):
         return requests.get(self._build_url(path), headers=self._get_auth_header("get", self._build_url(path)))
 
-    def getWithParams(self, path, queryParams):
+    def get_with_params(self, path, query_params):
         url = self._build_url(path)
-        if len(queryParams.keys()) > 0:
+        if len(query_params.keys()) > 0:
             url += "?"
 
-        absoluteUri = (url + urllib.parse.urlencode(queryParams)).lower()
-        return requests.get(self._build_url(path), params=queryParams, headers=self._get_auth_header("get", absoluteUri))
+        absolute_uri = (url + urllib.parse.urlencode(query_params)).lower()
+        return requests.get(
+            self._build_url(path),
+            params=query_params,
+            headers=self._get_auth_header("get", absolute_uri)
+        )
 
     def post(self, path, body):
-        jsonEncoded = jsonpickle.encode(body)
-        return requests.post(self._build_url(path), data=jsonEncoded, headers=self._get_auth_header("post", self._build_url(path), jsonEncoded))
+        json_encoded = jsonpickle.encode(body)
+        return requests.post(
+            self._build_url(path),
+            data=json_encoded,
+            headers=self._get_auth_header("post", self._build_url(path), json_encoded)
+        )
 
     def put(self, path, body):
-        jsonEncoded = jsonpickle.encode(body)
-        return requests.put(self._build_url(path), data=jsonEncoded, headers=self._get_auth_header("put", self._build_url(path), jsonEncoded))
+        json_encoded = jsonpickle.encode(body)
+        return requests.put(
+            self._build_url(path),
+            data=json_encoded,
+            headers=self._get_auth_header("put", self._build_url(path), json_encoded)
+        )
 
     def delete(self, path):
-        return requests.delete(self._build_url(path), headers=self._get_auth_header("delete", self._build_url(path)))
+        return requests.delete(
+            self._build_url(path),
+            headers=self._get_auth_header("delete", self._build_url(path))
+        )
 
     def _build_url(self, path):
-        return (self.baseUri + path).lower()
+        return (self.base_uri + path).lower()
 
     def _get_auth_header(self, method, uri, body=None):
         signature = self._get_signature(method, uri, body)

@@ -1,17 +1,18 @@
 class Keyword:
 
-    def from_dict(self, dictionaryItem):
-        self.keywordId = dictionaryItem["keywordId"]
-        self.shortNumberId = dictionaryItem["shortNumberId"]
-        self.keywordText = dictionaryItem["keywordText"]
-        self.mode = dictionaryItem["mode"]
-        self.forwardUrl = dictionaryItem["forwardUrl"]
-        self.enabled = dictionaryItem["enabled"]
-        self.created = dictionaryItem["created"]
-        self.lastModified = dictionaryItem["lastModified"]
-        self.tags = dictionaryItem["tags"]
-        self.customProperties = dictionaryItem.get("customProperties", None)
+    def from_dict(self, dictionary_item):
+        self.keywordId = dictionary_item["keywordId"]
+        self.shortNumberId = dictionary_item["shortNumberId"]
+        self.keywordText = dictionary_item["keywordText"]
+        self.mode = dictionary_item["mode"]
+        self.forwardUrl = dictionary_item["forwardUrl"]
+        self.enabled = dictionary_item["enabled"]
+        self.created = dictionary_item["created"]
+        self.lastModified = dictionary_item["lastModified"]
+        self.tags = dictionary_item["tags"]
+        self.customProperties = dictionary_item.get("customProperties", None)
 
+    # noinspection PyMethodMayBeStatic
     def from_response_list(self, list_of_keywords):
         items = []
         for item in list_of_keywords:

@@ -8,6 +8,7 @@ from models.strex_merchant_id import StrexMerchantId
 
 name = "target365-sdk"
 
+
 class ApiClient:
     PING = "api/ping"
     LOOKUP = "api/lookup"
@@ -37,7 +38,7 @@ class ApiClient:
         """
         response = self.client.get(self.PING)
         self.errorHandler.throw_if_not_success(response)
-        return response.text # returns the string "pong"
+        return response.text  # returns the string "pong"
 
     ###  Lookup controller  ###
 
@@ -52,13 +53,13 @@ class ApiClient:
         if msisdn is None:
             raise ValueError("msisdn")
         payload = {"msisdn": msisdn}
-        response = self.client.getWithParams(self.LOOKUP, payload)
+        response = self.client.get_with_params(self.LOOKUP, payload)
         if response.status_code == self.NOT_FOUND:
             return None
         self.errorHandler.throw_if_not_success(response)
-        lookupResult = LookupResult()
-        lookupResult.from_dict(response.json())
-        return lookupResult
+        lookup_result = LookupResult()
+        lookup_result.from_dict(response.json())
+        return lookup_result
 
     ###  Keyword controller  ###
 
@@ -92,7 +93,7 @@ class ApiClient:
         if tag is not None:
             params["tag"] = tag
 
-        response = self.client.getWithParams(self.KEYWORDS, params)
+        response = self.client.get_with_params(self.KEYWORDS, params)
         self.errorHandler.throw_if_not_success(response)
         return Keyword().from_response_list(response.json())
 
@@ -198,10 +199,9 @@ class ApiClient:
             return None
 
         self.errorHandler.throw_if_not_success(response)
-        outMessage = OutMessage()
-        outMessage.from_dict(response.json())
-        return outMessage
-
+        out_message = OutMessage()
+        out_message.from_dict(response.json())
+        return out_message
 
     def update_out_message(self, message):
         """
@@ -218,7 +218,6 @@ class ApiClient:
             self.OUT_MESSAGES + "/" + message.transactionId, message)
         self.errorHandler.throw_if_not_success(response)
 
-
     def delete_out_message(self, transaction_id):
         """
         DELETE /api/out-messages/batch/{transactionId}
@@ -231,10 +230,9 @@ class ApiClient:
         response = self.client.delete(self.OUT_MESSAGES + "/" + transaction_id)
         self.errorHandler.throw_if_not_success(response)
 
-
     ###  InMessages controller  ###
 
-    def get_in_message(self, shortNumberId, transaction_id):
+    def get_in_message(self, short_number_id, transaction_id):
         """
         GET /api/in-messages/{shortNumberId}/{transactionId}
         Gets and in-message
@@ -245,7 +243,7 @@ class ApiClient:
         if transaction_id is None:
             raise ValueError("transactionId")
 
-        response = self.client.get(self.IN_MESSAGES + "/" + shortNumberId + "/" + transaction_id)
+        response = self.client.get(self.IN_MESSAGES + "/" + short_number_id + "/" + transaction_id)
         self.errorHandler.throw_if_not_success(response)
 
         return response.json()
@@ -279,9 +277,9 @@ class ApiClient:
             return None
 
         self.errorHandler.throw_if_not_success(response)
-        strexMerchantId = StrexMerchantId()
-        strexMerchantId.from_dict(response.json())
-        return strexMerchantId
+        strex_merchant_id = StrexMerchantId()
+        strex_merchant_id.from_dict(response.json())
+        return strex_merchant_id
 
     def save_merchant(self, merchant):
         """
@@ -295,105 +293,99 @@ class ApiClient:
             raise ValueError("merchantId")
 
         response = self.client.put(self.STREX_MERCHANTS + "/" + merchant.merchantId, merchant)
-        self.errorHandler.throw_if_not_success(response) # expecting http 204 response (no content)
+        self.errorHandler.throw_if_not_success(response)  # expecting http 204 response (no content)
 
-    def delete_merchant(self, merchantId):
+    def delete_merchant(self, merchant_id):
         """
         DELETE /api/strex/merchants/{merchantId}
         Deletes a merchant
         :merchantId: string
         """
-        if merchantId is None:
+        if merchant_id is None:
             raise ValueError("merchantId")
 
-        response = self.client.delete(self.STREX_MERCHANTS + "/" + merchantId)
+        response = self.client.delete(self.STREX_MERCHANTS + "/" + merchant_id)
         self.errorHandler.throw_if_not_success(response)
 
-
-    def create_one_time_password(self, oneTimePasswordData):
+    def create_one_time_password(self, one_time_password_data):
         """
         POST /api/strex/one-time-passwords
         :return:
         """
 
-        if oneTimePasswordData is None:
+        if one_time_password_data is None:
             raise ValueError("invalid oneTimePasswordData")
-        if oneTimePasswordData['transactionId'] is None:
+        if one_time_password_data['transactionId'] is None:
             raise ValueError("invalid oneTimePasswordData.transactionId")
-        if oneTimePasswordData['merchantId'] is None:
+        if one_time_password_data['merchantId'] is None:
             raise ValueError("invalid oneTimePasswordData.merchantId")
-        if oneTimePasswordData['recipient'] is None:
+        if one_time_password_data['recipient'] is None:
             raise ValueError("invalid oneTimePasswordData.recipient")
-        if oneTimePasswordData['sender'] is None:
+        if one_time_password_data['sender'] is None:
             raise ValueError("invalid oneTimePasswordData.sender")
-        if oneTimePasswordData['recurring'] is None:
+        if one_time_password_data['recurring'] is None:
             raise ValueError("invalid oneTimePasswordData.recurring")
 
-        response = self.client.post(self.STREX_ONE_TIME_PASSWORDS, oneTimePasswordData)
+        response = self.client.post(self.STREX_ONE_TIME_PASSWORDS, one_time_password_data)
         self.errorHandler.throw_if_not_success(response)
 
-
-    def get_one_time_password(self, transactionId):
+    def get_one_time_password(self, transaction_id):
         """
         GET /api/strex/one-time-passwords/{transactionId}
 
-        :param transactionId:
+        :param transaction_id:
         :return: OneTimePasswordInfo
         """
 
-        response = self.client.get(self.STREX_ONE_TIME_PASSWORDS + '/' + transactionId)
+        response = self.client.get(self.STREX_ONE_TIME_PASSWORDS + '/' + transaction_id)
         self.errorHandler.throw_if_not_success(response)
 
         return response.json()
 
-
-    def create_transaction(self, transactionData):
+    def create_transaction(self, transaction_data):
         """
         POST /api/strex/transactions
         :return:
         """
 
-        response = self.client.post(self.STREX_TRANSACTIONS, transactionData)
+        response = self.client.post(self.STREX_TRANSACTIONS, transaction_data)
         self.errorHandler.throw_if_not_success(response)
 
         return self._get_id_from_header(response.headers)
 
-
-    def get_transaction(self, transactionId):
+    def get_transaction(self, transaction_id):
         """
         GET /api/strex/transactions/{transactionId}
         :return:
         """
 
-        response = self.client.get(self.STREX_TRANSACTIONS + '/' + transactionId)
+        response = self.client.get(self.STREX_TRANSACTIONS + '/' + transaction_id)
         self.errorHandler.throw_if_not_success(response)
 
         return response.json()
 
-
-    def delete_transaction(self, transactionId):
+    def delete_transaction(self, transaction_id):
         """
         DELETE /api/strex/transactions/{transactionId}
-        :param transactionId:
+        :param transaction_id:
         :return:
         """
-        response = self.client.delete(self.STREX_TRANSACTIONS + '/' + transactionId)
+        response = self.client.delete(self.STREX_TRANSACTIONS + '/' + transaction_id)
         self.errorHandler.throw_if_not_success(response)
 
 
     ### PublicKey controller  ###
 
-    def get_server_public_key(self, keyName):
+    def get_server_public_key(self, key_name):
         """
-        GET /api/server/public-keys/{keyName}
-        :param keyName:
+        GET /api/server/public-keys/{key_name}
+        :param key_name:
         :return:
         """
-        response = self.client.get(self.SERVER_PUBLIC_KEYS + '/' + keyName)
+        response = self.client.get(self.SERVER_PUBLIC_KEYS + '/' + key_name)
         self.errorHandler.throw_if_not_success(response)
 
         return response.json()
-
 
     def get_client_public_keys(self):
         """
@@ -405,27 +397,25 @@ class ApiClient:
 
         return response.json()
 
-
-    def get_client_public_key(self, keyName):
+    def get_client_public_key(self, key_name):
         """
-        GET /api/client/public-keys/{keyName}
+        GET /api/client/public-keys/{key_name}
         :return: Dict
         """
-        response = self.client.get(self.CLIENT_PUBLIC_KEYS + '/' + keyName)
+        response = self.client.get(self.CLIENT_PUBLIC_KEYS + '/' + key_name)
         self.errorHandler.throw_if_not_success(response)
 
         return response.json()
 
-
-    def delete_client_public_key(self, keyName):
+    def delete_client_public_key(self, key_name):
         """
-        DELETE /api/client/public-keys/{keyName}
+        DELETE /api/client/public-keys/{key_name}
         :return:
         """
-        response = self.client.delete(self.CLIENT_PUBLIC_KEYS + '/' + keyName)
+        response = self.client.delete(self.CLIENT_PUBLIC_KEYS + '/' + key_name)
         self.errorHandler.throw_if_not_success(response)
 
-
+    # noinspection PyMethodMayBeStatic,PyMethodMayBeStatic
     def _get_id_from_header(self, headers):
         """
         Returns the newly created resource's identifier from the Locaion header

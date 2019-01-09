@@ -9,7 +9,7 @@ If you want, you can generate your EC public/private key-pair here: <https://cry
 ### PIP
 
 ```
-pip install -i https://test.pypi.org/simple/ target365-sdk
+pip install target365-sdk
 ```
 
 ### Authors and maintainers

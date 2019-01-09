@@ -11,6 +11,7 @@ If you want, you can generate your EC public/private key-pair here: <https://cry
 ```
 pip install target365-sdk
 ```
+[![pypi version](https://img.shields.io/pypi/v/target365_sdk.svg)](https://pypi.org/project/target365-sdk/)
 
 ### Authors and maintainers
 Target365 (<support@target365.no>)

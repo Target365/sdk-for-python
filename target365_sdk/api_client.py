@@ -60,8 +60,7 @@ class ApiClient:
 
         response.raise_for_status()
 
-        lookup_result = LookupResult()
-        lookup_result.from_dict(response.json())
+        lookup_result = LookupResult(**response.json())
         return lookup_result
 
     ###  Keyword controller  ###
@@ -98,7 +97,7 @@ class ApiClient:
 
         response = self.client.get_with_params(self.KEYWORDS, params)
         response.raise_for_status()
-        return Keyword().from_response_list(response.json())
+        return Keyword.from_list(response.json())
 
     def get_keyword(self, keyword_id):
         """
@@ -116,8 +115,7 @@ class ApiClient:
 
         response.raise_for_status()
         
-        keyword = Keyword()
-        keyword.from_dict(response.json())
+        keyword = Keyword(**response.json())
         return keyword
 
     def update_keyword(self, keyword):
@@ -202,8 +200,7 @@ class ApiClient:
             return None
 
         response.raise_for_status()
-        out_message = OutMessage()
-        out_message.from_dict(response.json())
+        out_message = OutMessage(**response.json())
         return out_message
 
     def update_out_message(self, message):
@@ -262,7 +259,7 @@ class ApiClient:
         """
         response = self.client.get(self.STREX_MERCHANTS)
         response.raise_for_status()
-        return StrexMerchantId().from_response_list(response.json())
+        return StrexMerchantId.from_list(response.json())
 
     def get_merchant(self, merchant_id):
         """
@@ -280,8 +277,7 @@ class ApiClient:
             return None
 
         response.raise_for_status()
-        strex_merchant_id = StrexMerchantId()
-        strex_merchant_id.from_dict(response.json())
+        strex_merchant_id = StrexMerchantId(**response.json())
         return strex_merchant_id
 
     def save_merchant(self, merchant):

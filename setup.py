@@ -4,7 +4,7 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="target365sdk",
+    name="target365_sdk",
     version="1.0.0",
     author="Target365",
     author_email="support@target365.no",

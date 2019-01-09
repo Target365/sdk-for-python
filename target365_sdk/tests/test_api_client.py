@@ -3,10 +3,10 @@ import os
 import uuid
 from datetime import datetime
 from datetime import timedelta
-from api_client import ApiClient
-from models.keyword import Keyword
-from models.out_message import OutMessage
-from models.strex_merchant_id import StrexMerchantId
+from ..api_client import ApiClient
+from ..models.keyword import Keyword
+from ..models.out_message import OutMessage
+from ..models.strex_merchant_id import StrexMerchantId
 
 
 @pytest.fixture

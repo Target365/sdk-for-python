@@ -1,5 +1,4 @@
 import requests
-import json
 import ecdsa
 import binascii
 import time

@@ -1,12 +1,12 @@
-from helpers.http_client import HttpClient
-from helpers.http_error_handler import HttpErrorHandler
-from models.lookup_result import LookupResult
-from models.keyword import Keyword
-from models.out_message import OutMessage
-from models.strex_merchant_id import StrexMerchantId
+from .helpers.http_client import HttpClient
+from .helpers.http_error_handler import HttpErrorHandler
+from .models.lookup_result import LookupResult
+from .models.keyword import Keyword
+from .models.out_message import OutMessage
+from .models.strex_merchant_id import StrexMerchantId
 
 
-name = "target365-sdk"
+name = "target365_sdk"
 
 
 class ApiClient:
@@ -36,6 +36,8 @@ class ApiClient:
         Pings the service and returns a hello message
         :return: return description
         """
+
+        print("Pinging")
         response = self.client.get(self.PING)
         self.errorHandler.throw_if_not_success(response)
         return response.text  # returns the string "pong"

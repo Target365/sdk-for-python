@@ -1,5 +1,4 @@
 from .helpers.http_client import HttpClient
-from .helpers.http_error_handler import HttpErrorHandler
 from .models.lookup_result import LookupResult
 from .models.keyword import Keyword
 from .models.out_message import OutMessage
@@ -26,7 +25,6 @@ class ApiClient:
 
     def __init__(self, base_uri, key_name, private_key):
         self.client = HttpClient(base_uri, key_name, private_key)
-        self.errorHandler = HttpErrorHandler()
 
     ###  Ping controller  ###
 
@@ -39,7 +37,8 @@ class ApiClient:
 
         print("Pinging")
         response = self.client.get(self.PING)
-        self.errorHandler.throw_if_not_success(response)
+        response.raise_for_status()
+
         return response.text  # returns the string "pong"
 
     ###  Lookup controller  ###
@@ -58,7 +57,9 @@ class ApiClient:
         response = self.client.get_with_params(self.LOOKUP, payload)
         if response.status_code == self.NOT_FOUND:
             return None
-        self.errorHandler.throw_if_not_success(response)
+
+        response.raise_for_status()
+
         lookup_result = LookupResult()
         lookup_result.from_dict(response.json())
         return lookup_result
@@ -75,7 +76,7 @@ class ApiClient:
         if keyword is None:
             raise ValueError("keyword")
         response = self.client.post(self.KEYWORDS, keyword)
-        self.errorHandler.throw_if_not_success(response)
+        response.raise_for_status()
 
         return self._get_id_from_header(response.headers)
 
@@ -96,7 +97,7 @@ class ApiClient:
             params["tag"] = tag
 
         response = self.client.get_with_params(self.KEYWORDS, params)
-        self.errorHandler.throw_if_not_success(response)
+        response.raise_for_status()
         return Keyword().from_response_list(response.json())
 
     def get_keyword(self, keyword_id):
@@ -113,7 +114,7 @@ class ApiClient:
         if response.status_code == self.NOT_FOUND:
             return None
 
-        self.errorHandler.throw_if_not_success(response)
+        response.raise_for_status()
         
         keyword = Keyword()
         keyword.from_dict(response.json())
@@ -133,7 +134,7 @@ class ApiClient:
         response = self.client.put(
             self.KEYWORDS + "/" + keyword.keywordId, keyword)
 
-        self.errorHandler.throw_if_not_success(response)
+        response.raise_for_status()
 
     def delete_keyword(self, keyword_id):
         """
@@ -145,7 +146,7 @@ class ApiClient:
             raise ValueError("keywordId")
 
         response = self.client.delete(self.KEYWORDS + "/" + keyword_id)
-        self.errorHandler.throw_if_not_success(response)
+        response.raise_for_status()
 
     ###  OutMessage controller  ###
 
@@ -158,7 +159,7 @@ class ApiClient:
         if msisdns is None:
             raise ValueError("msisdns")
         response = self.client.post(self.PREPARE_MSISDNS, msisdns)
-        self.errorHandler.throw_if_not_success(response)
+        response.raise_for_status()
 
     def create_out_message(self, message):
         """
@@ -170,7 +171,7 @@ class ApiClient:
             raise ValueError("message")
 
         response = self.client.post(self.OUT_MESSAGES, message)
-        self.errorHandler.throw_if_not_success(response)
+        response.raise_for_status()
 
         return self._get_id_from_header(response.headers)
 
@@ -184,7 +185,7 @@ class ApiClient:
             raise ValueError("messages")
 
         response = self.client.post(self.OUT_MESSAGES + "/batch", messages)
-        self.errorHandler.throw_if_not_success(response)
+        response.raise_for_status()
 
     def get_out_message(self, transaction_id):
         """
@@ -200,7 +201,7 @@ class ApiClient:
         if response.status_code == self.NOT_FOUND:
             return None
 
-        self.errorHandler.throw_if_not_success(response)
+        response.raise_for_status()
         out_message = OutMessage()
         out_message.from_dict(response.json())
         return out_message
@@ -218,7 +219,7 @@ class ApiClient:
 
         response = self.client.put(
             self.OUT_MESSAGES + "/" + message.transactionId, message)
-        self.errorHandler.throw_if_not_success(response)
+        response.raise_for_status()
 
     def delete_out_message(self, transaction_id):
         """
@@ -230,7 +231,7 @@ class ApiClient:
             raise ValueError("transactionId")
 
         response = self.client.delete(self.OUT_MESSAGES + "/" + transaction_id)
-        self.errorHandler.throw_if_not_success(response)
+        response.raise_for_status()
 
     ###  InMessages controller  ###
 
@@ -246,7 +247,7 @@ class ApiClient:
             raise ValueError("transactionId")
 
         response = self.client.get(self.IN_MESSAGES + "/" + short_number_id + "/" + transaction_id)
-        self.errorHandler.throw_if_not_success(response)
+        response.raise_for_status()
 
         return response.json()
 
@@ -260,7 +261,7 @@ class ApiClient:
         :return: StrexMerchantId[]
         """
         response = self.client.get(self.STREX_MERCHANTS)
-        self.errorHandler.throw_if_not_success(response)
+        response.raise_for_status()
         return StrexMerchantId().from_response_list(response.json())
 
     def get_merchant(self, merchant_id):
@@ -278,7 +279,7 @@ class ApiClient:
         if response.status_code == self.NOT_FOUND:
             return None
 
-        self.errorHandler.throw_if_not_success(response)
+        response.raise_for_status()
         strex_merchant_id = StrexMerchantId()
         strex_merchant_id.from_dict(response.json())
         return strex_merchant_id
@@ -294,8 +295,9 @@ class ApiClient:
         if merchant.merchantId is None:
             raise ValueError("merchantId")
 
+        # expecting http 204 response (no content)
         response = self.client.put(self.STREX_MERCHANTS + "/" + merchant.merchantId, merchant)
-        self.errorHandler.throw_if_not_success(response)  # expecting http 204 response (no content)
+        response.raise_for_status()
 
     def delete_merchant(self, merchant_id):
         """
@@ -307,7 +309,7 @@ class ApiClient:
             raise ValueError("merchantId")
 
         response = self.client.delete(self.STREX_MERCHANTS + "/" + merchant_id)
-        self.errorHandler.throw_if_not_success(response)
+        response.raise_for_status()
 
     def create_one_time_password(self, one_time_password_data):
         """
@@ -329,7 +331,7 @@ class ApiClient:
             raise ValueError("invalid oneTimePasswordData.recurring")
 
         response = self.client.post(self.STREX_ONE_TIME_PASSWORDS, one_time_password_data)
-        self.errorHandler.throw_if_not_success(response)
+        response.raise_for_status()
 
     def get_one_time_password(self, transaction_id):
         """
@@ -340,7 +342,7 @@ class ApiClient:
         """
 
         response = self.client.get(self.STREX_ONE_TIME_PASSWORDS + '/' + transaction_id)
-        self.errorHandler.throw_if_not_success(response)
+        response.raise_for_status()
 
         return response.json()
 
@@ -351,7 +353,7 @@ class ApiClient:
         """
 
         response = self.client.post(self.STREX_TRANSACTIONS, transaction_data)
-        self.errorHandler.throw_if_not_success(response)
+        response.raise_for_status()
 
         return self._get_id_from_header(response.headers)
 
@@ -362,7 +364,7 @@ class ApiClient:
         """
 
         response = self.client.get(self.STREX_TRANSACTIONS + '/' + transaction_id)
-        self.errorHandler.throw_if_not_success(response)
+        response.raise_for_status()
 
         return response.json()
 
@@ -373,7 +375,7 @@ class ApiClient:
         :return:
         """
         response = self.client.delete(self.STREX_TRANSACTIONS + '/' + transaction_id)
-        self.errorHandler.throw_if_not_success(response)
+        response.raise_for_status()
 
 
     ### PublicKey controller  ###
@@ -385,7 +387,7 @@ class ApiClient:
         :return:
         """
         response = self.client.get(self.SERVER_PUBLIC_KEYS + '/' + key_name)
-        self.errorHandler.throw_if_not_success(response)
+        response.raise_for_status()
 
         return response.json()
 
@@ -395,7 +397,7 @@ class ApiClient:
         :return: List
         """
         response = self.client.get(self.CLIENT_PUBLIC_KEYS)
-        self.errorHandler.throw_if_not_success(response)
+        response.raise_for_status()
 
         return response.json()
 
@@ -405,7 +407,7 @@ class ApiClient:
         :return: Dict
         """
         response = self.client.get(self.CLIENT_PUBLIC_KEYS + '/' + key_name)
-        self.errorHandler.throw_if_not_success(response)
+        response.raise_for_status()
 
         return response.json()
 
@@ -415,7 +417,7 @@ class ApiClient:
         :return:
         """
         response = self.client.delete(self.CLIENT_PUBLIC_KEYS + '/' + key_name)
-        self.errorHandler.throw_if_not_success(response)
+        response.raise_for_status()
 
     # noinspection PyMethodMayBeStatic,PyMethodMayBeStatic
     def _get_id_from_header(self, headers):

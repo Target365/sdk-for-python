@@ -21,9 +21,4 @@ class Model:
         :param list of dictionaries:
         :return list of models:
         """
-        model_items = []
-        for item in items:
-            model_item = cls(**item)
-            model_items.append(model_item)
-
-        return model_items
+        return [cls(**item) for item in items]

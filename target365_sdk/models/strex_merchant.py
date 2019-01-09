@@ -1,6 +1,6 @@
 from .model import Model
 
-class StrexMerchantId(Model):
+class StrexMerchant(Model):
 
     def _accepted_params(self) -> list:
         return [

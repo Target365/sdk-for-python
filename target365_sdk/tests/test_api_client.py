@@ -6,7 +6,9 @@ from datetime import timedelta
 from ..api_client import ApiClient
 from ..models.keyword import Keyword
 from ..models.out_message import OutMessage
-from ..models.strex_merchant_id import StrexMerchantId
+from ..models.strex_merchant import StrexMerchant
+from ..models.one_time_password import OneTimePassword
+from ..models.transaction import Transaction
 
 
 @pytest.fixture
@@ -138,23 +140,23 @@ def test_prepare_msisdns(client):
 
 
 def test_get_in_message(client, valid_short_number_id, transaction_id):
-    in_message_info = client.get_in_message(valid_short_number_id, transaction_id)
-    assert in_message_info['transactionId'] == transaction_id
+    in_message = client.get_in_message(valid_short_number_id, transaction_id)
+    assert in_message.transactionId == transaction_id
 
 
 def test_lookup_should_return_result(client):
     assert client.loopup("+4798079008") is not None
 
 
-def test_strex_merchant_id_sequence(client, valid_short_number_id):
+def test_strex_merchant_sequence(client, valid_short_number_id):
     merchant_id_identifier = "12341"
 
     # create        
-    merchant_id = StrexMerchantId()
-    merchant_id.merchantId = merchant_id_identifier
-    merchant_id.shortNumberId = valid_short_number_id
-    merchant_id.password = "abcdef"
-    client.save_merchant(merchant_id)
+    strex_merchant = StrexMerchant()
+    strex_merchant.merchantId = merchant_id_identifier
+    strex_merchant.shortNumberId = valid_short_number_id
+    strex_merchant.password = "abcdef"
+    client.save_merchant(strex_merchant)
 
     # get by id
     fetched = client.get_merchant(merchant_id_identifier)
@@ -165,7 +167,6 @@ def test_strex_merchant_id_sequence(client, valid_short_number_id):
 
     # delete
     client.delete_merchant(merchant_id_identifier)
-    assert client.get_merchant(merchant_id_identifier) is None
 
 
 def test_create_one_time_password(client, random_transaction_id):
@@ -177,13 +178,15 @@ def test_create_one_time_password(client, random_transaction_id):
         'recurring': False
     }
 
-    client.create_one_time_password(one_time_password_data)
+    one_time_password = OneTimePassword(**one_time_password_data)
+
+    client.create_one_time_password(one_time_password)
 
 
 def test_get_time_password(client, transaction_id):
-    one_time_password_info = client.get_one_time_password(transaction_id)
+    one_time_password = client.get_one_time_password(transaction_id)
 
-    assert one_time_password_info['transactionId'] == transaction_id
+    assert one_time_password.transactionId == transaction_id
 
 
 def test_transaction_sequence(client, random_transaction_id):
@@ -199,26 +202,29 @@ def test_transaction_sequence(client, random_transaction_id):
         "transactionId": random_transaction_id
     }
 
-    client.create_transaction(transaction_data)
+    transaction = Transaction(**transaction_data)
 
-    transaction_data = client.get_transaction(random_transaction_id)
-    assert transaction_data['transactionId'] == random_transaction_id
+    client.create_transaction(transaction)
+
+    transaction = client.get_transaction(random_transaction_id)
+    assert transaction.transactionId == random_transaction_id
 
     client.delete_transaction(random_transaction_id)
 
 
 def test_get_server_public_key(client):
-    response_data = client.get_server_public_key('2017-11-17')
+    public_key = client.get_server_public_key('2017-11-17')
 
-    assert response_data['accountId'] == 8
+    assert public_key.accountId == 8
 
 
+@pytest.mark.testnow
 def test_get_client_public_keys(client, api_key_name):
     client_public_keys = client.get_client_public_keys()
 
     found_key = False
     for client_public_key in client_public_keys:
-        if client_public_key['name'] == api_key_name:
+        if client_public_key.name == api_key_name:
             found_key = True
 
     assert found_key is True
@@ -227,7 +233,7 @@ def test_get_client_public_keys(client, api_key_name):
 def test_get_client_public_key(client, api_key_name):
     client_public_key = client.get_client_public_key(api_key_name)
 
-    assert client_public_key['name'] == api_key_name
+    assert client_public_key.name == api_key_name
 
 
 # Formats datetime object into utc string

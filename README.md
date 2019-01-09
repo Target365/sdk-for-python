@@ -24,6 +24,16 @@ Please feel free to raise an issue against this repository if you have any quest
 New contributors to this project are welcome. If you are interested in contributing please
 send an email to support@target365.no.
 
+##### Automated Tests
+
+Automated tests requires `pytest` framework. There is a useful script `/test` which you may find helpful
+when running tests. In order to use this script, you should make a copy of `test_secrets.example.sh`
+and rename it to `test_secrets.sh`. You should then modify the values in `test_secrets.sh` appropriately. Do not
+commit `test_secrets.sh` to the repository, it is intentionally included in `.gitignore`.
+
+If you want to run only selected test, you can flag the respective test method with `@pytest.mark.testnow` and
+instead run `/test testnow`
+
 ### License
 
 This library is released under the MIT license.

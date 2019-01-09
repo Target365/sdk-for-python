@@ -5,7 +5,7 @@ from .models.out_message import OutMessage
 from .models.strex_merchant import StrexMerchant
 from .models.in_message import InMessage
 from .models.one_time_password import OneTimePassword
-from .models.transaction import Transaction
+from .models.strex_transaction import StrexTransaction
 from .models.public_key import PublicKey
 
 
@@ -251,9 +251,9 @@ class ApiClient:
         return InMessage(**response.json())
 
 
-    ###  StrexMerchantIds controller  ###
+    ###  StrexMerchants controller  ###
 
-    def get_merchant_ids(self) -> list:
+    def get_strex_merchants(self) -> list:
         """
         GET /api/strex/merchants
         Gets all merchant ids.
@@ -263,7 +263,7 @@ class ApiClient:
         response.raise_for_status()
         return StrexMerchant.from_list(response.json())
 
-    def get_merchant(self, merchant_id: str) -> StrexMerchant:
+    def get_strex_merchant(self, merchant_id: str) -> StrexMerchant:
         """
         GET /api/strex/merchants/{merchantId}
         Gets a merchant.
@@ -282,22 +282,22 @@ class ApiClient:
 
         return StrexMerchant(**response.json())
 
-    def save_merchant(self, merchant: StrexMerchant):
+    def save_strex_merchant(self, strex_merchant: StrexMerchant):
         """
         PUT /api/strex/merchants/{merchantId}
         Creates/updates a merchant.
         :merchant: StrexMerchant
         """
-        if merchant is None:
+        if strex_merchant is None:
             raise ValueError("merchant")
-        if merchant.merchantId is None:
+        if strex_merchant.merchantId is None:
             raise ValueError("merchantId")
 
         # expecting http 204 response (no content)
-        response = self.client.put(self.STREX_MERCHANTS + "/" + merchant.merchantId, merchant)
+        response = self.client.put(self.STREX_MERCHANTS + "/" + strex_merchant.merchantId, strex_merchant)
         response.raise_for_status()
 
-    def delete_merchant(self, merchant_id):
+    def delete_strex_merchant(self, merchant_id):
         """
         DELETE /api/strex/merchants/{merchantId}
         Deletes a merchant
@@ -345,7 +345,7 @@ class ApiClient:
 
         return OneTimePassword(**response.json())
 
-    def create_transaction(self, transaction: Transaction) -> str:
+    def create_strex_transaction(self, transaction: StrexTransaction) -> str:
         """
         POST /api/strex/transactions
         :return str:
@@ -356,7 +356,7 @@ class ApiClient:
 
         return self._get_id_from_header(response.headers)
 
-    def get_transaction(self, transaction_id: str) -> Transaction:
+    def get_strex_transaction(self, transaction_id: str) -> StrexTransaction:
         """
         GET /api/strex/transactions/{transactionId}
         :return:
@@ -365,9 +365,9 @@ class ApiClient:
         response = self.client.get(self.STREX_TRANSACTIONS + '/' + transaction_id)
         response.raise_for_status()
 
-        return Transaction(**response.json())
+        return StrexTransaction(**response.json())
 
-    def delete_transaction(self, transaction_id: str):
+    def delete_strex_transaction(self, transaction_id: str):
         """
         DELETE /api/strex/transactions/{transactionId}
         :param transaction_id:

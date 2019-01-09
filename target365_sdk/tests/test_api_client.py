@@ -8,7 +8,7 @@ from ..models.keyword import Keyword
 from ..models.out_message import OutMessage
 from ..models.strex_merchant import StrexMerchant
 from ..models.one_time_password import OneTimePassword
-from ..models.transaction import Transaction
+from ..models.strex_transaction import StrexTransaction
 
 
 @pytest.fixture
@@ -149,24 +149,24 @@ def test_lookup_should_return_result(client):
 
 
 def test_strex_merchant_sequence(client, valid_short_number_id):
-    merchant_id_identifier = "12341"
+    merchant_id = "12341"
 
     # create        
     strex_merchant = StrexMerchant()
-    strex_merchant.merchantId = merchant_id_identifier
+    strex_merchant.merchantId = merchant_id
     strex_merchant.shortNumberId = valid_short_number_id
     strex_merchant.password = "abcdef"
-    client.save_merchant(strex_merchant)
+    client.save_strex_merchant(strex_merchant)
 
     # get by id
-    fetched = client.get_merchant(merchant_id_identifier)
+    fetched = client.get_strex_merchant(merchant_id)
     assert fetched is not None
 
     # get all
-    assert len(client.get_merchant_ids()) > 0
+    assert len(client.get_strex_merchants()) > 0
 
     # delete
-    client.delete_merchant(merchant_id_identifier)
+    client.delete_strex_merchant(merchant_id)
 
 
 def test_create_one_time_password(client, random_transaction_id):
@@ -189,8 +189,8 @@ def test_get_time_password(client, transaction_id):
     assert one_time_password.transactionId == transaction_id
 
 
-def test_transaction_sequence(client, random_transaction_id):
-    transaction_data = {
+def test_strex_transaction_sequence(client, random_transaction_id):
+    strex_transaction_data = {
         "created": "2018-11-02T12:00:00Z",
         "invoiceText": "Thank you for your donation",
         "lastModified": "2018-11-02T12:00:00Z",
@@ -202,14 +202,14 @@ def test_transaction_sequence(client, random_transaction_id):
         "transactionId": random_transaction_id
     }
 
-    transaction = Transaction(**transaction_data)
+    strex_transaction = StrexTransaction(**strex_transaction_data)
 
-    client.create_transaction(transaction)
+    client.create_strex_transaction(strex_transaction)
 
-    transaction = client.get_transaction(random_transaction_id)
-    assert transaction.transactionId == random_transaction_id
+    strex_transaction = client.get_strex_transaction(random_transaction_id)
+    assert strex_transaction.transactionId == random_transaction_id
 
-    client.delete_transaction(random_transaction_id)
+    client.delete_strex_transaction(random_transaction_id)
 
 
 def test_get_server_public_key(client):
@@ -218,7 +218,6 @@ def test_get_server_public_key(client):
     assert public_key.accountId == 8
 
 
-@pytest.mark.testnow
 def test_get_client_public_keys(client, api_key_name):
     client_public_keys = client.get_client_public_keys()
 

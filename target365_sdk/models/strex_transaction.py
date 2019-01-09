@@ -1,6 +1,6 @@
 from .model import Model
 
-class Transaction(Model):
+class StrexTransaction(Model):
 
     def _accepted_params(self) -> list:
         return [

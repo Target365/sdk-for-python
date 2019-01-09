@@ -1,4 +1,6 @@
-class OutMessage:
+from .model import Model
+
+class OutMessage(Model):
     def from_dict(self, dictionary_item):
 
         self.transactionId = dictionary_item["transactionId"]

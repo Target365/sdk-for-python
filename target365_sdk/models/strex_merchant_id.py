@@ -1,4 +1,6 @@
-class StrexMerchantId:
+from .model import Model
+
+class StrexMerchantId(Model):
     def from_dict(self, dictionary_item):
         self.merchantId = dictionary_item["merchantId"]
         self.shortNumberId = dictionary_item["shortNumberId"]

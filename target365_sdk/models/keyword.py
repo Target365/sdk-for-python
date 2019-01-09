@@ -1,4 +1,6 @@
-class Keyword:
+from .model import Model
+
+class Keyword(Model):
 
     def from_dict(self, dictionary_item):
         self.keywordId = dictionary_item["keywordId"]

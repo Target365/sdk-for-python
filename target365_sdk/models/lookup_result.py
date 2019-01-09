@@ -1,4 +1,6 @@
-class LookupResult:
+from .model import Model
+
+class LookupResult(Model):
     def from_dict(self, dictonary_item):
         """
         Covnerts json deserialized dict object into LookupResult

@@ -68,7 +68,7 @@ class ApiClient:
 
     ###  Keyword controller  ###
 
-    def create_keyword(self, keyword) -> str:
+    def create_keyword(self, keyword):
         """
         POST /api/keywords
         Creates a new keyword.
@@ -82,7 +82,7 @@ class ApiClient:
 
         return self._get_id_from_header(response.headers)
 
-    def get_all_keywords(self, short_number_id=None, keyword=None, mode=None, tag=None) -> list:
+    def get_all_keywords(self, short_number_id=None, keyword=None, mode=None, tag=None):
         """
         GET /api/keywords
         Gets all keywords.
@@ -102,7 +102,7 @@ class ApiClient:
         response.raise_for_status()
         return Keyword.from_list(response.json())
 
-    def get_keyword(self, keyword_id: str) -> Keyword:
+    def get_keyword(self, keyword_id):
         """
         GET /api/keywords/{keywordId}
         Gets a keyword.
@@ -120,11 +120,12 @@ class ApiClient:
         
         return Keyword(**response.json())
 
-    def update_keyword(self, keyword: Keyword):
+    def update_keyword(self, keyword):
         """
         PUT /api/keywords/{keywordId}
         Updates a keyword
-        :keyword: Keyword to update      
+        :param keyword: Keyword
+        :return:
         """
         if keyword is None:
             raise ValueError("keyword")
@@ -136,7 +137,7 @@ class ApiClient:
 
         response.raise_for_status()
 
-    def delete_keyword(self, keyword_id: str):
+    def delete_keyword(self, keyword_id):
         """
         DELETE /api/keywords/{keywordId}
         Deletes a keyword
@@ -150,7 +151,7 @@ class ApiClient:
 
     ###  OutMessage controller  ###
 
-    def prepare_msisdns(self, msisdns: str):
+    def prepare_msisdns(self, msisdns):
         """
         POST /api/prepare-msisdns
         MSISDNs to prepare as a string array
@@ -161,7 +162,7 @@ class ApiClient:
         response = self.client.post(self.PREPARE_MSISDNS, msisdns)
         response.raise_for_status()
 
-    def create_out_message(self, out_message: OutMessage):
+    def create_out_message(self, out_message):
         """
         POST /api/out-messages
         Creates a new out-message
@@ -175,7 +176,7 @@ class ApiClient:
 
         return self._get_id_from_header(response.headers)
 
-    def create_out_message_batch(self, out_messages: list):
+    def create_out_message_batch(self, out_messages):
         """
         POST /api/out-messages/batch
         Creates a new out-message batch.
@@ -187,7 +188,7 @@ class ApiClient:
         response = self.client.post(self.OUT_MESSAGES + "/batch", out_messages)
         response.raise_for_status()
 
-    def get_out_message(self, transaction_id: str) -> OutMessage:
+    def get_out_message(self, transaction_id):
         """
         GET /api/out-messages/batch/{transactionId}
         Gets and out-message
@@ -205,7 +206,7 @@ class ApiClient:
 
         return OutMessage(**response.json())
 
-    def update_out_message(self, out_message: OutMessage):
+    def update_out_message(self, out_message):
         """
         PUT /api/out-messages/batch/{transactionId}
         Updates a future scheduled out-message.
@@ -220,7 +221,7 @@ class ApiClient:
             self.OUT_MESSAGES + "/" + out_message.transactionId, out_message)
         response.raise_for_status()
 
-    def delete_out_message(self, transaction_id: str):
+    def delete_out_message(self, transaction_id):
         """
         DELETE /api/out-messages/batch/{transactionId}
         Deletes a future sheduled out-message.
@@ -234,7 +235,7 @@ class ApiClient:
 
     ###  InMessages controller  ###
 
-    def get_in_message(self, short_number_id, transaction_id) -> InMessage:
+    def get_in_message(self, short_number_id, transaction_id):
         """
         GET /api/in-messages/{shortNumberId}/{transactionId}
         Gets and in-message
@@ -253,7 +254,7 @@ class ApiClient:
 
     ###  StrexMerchants controller  ###
 
-    def get_strex_merchants(self) -> list:
+    def get_strex_merchants(self):
         """
         GET /api/strex/merchants
         Gets all merchant ids.
@@ -263,7 +264,7 @@ class ApiClient:
         response.raise_for_status()
         return StrexMerchant.from_list(response.json())
 
-    def get_strex_merchant(self, merchant_id: str) -> StrexMerchant:
+    def get_strex_merchant(self, merchant_id):
         """
         GET /api/strex/merchants/{merchantId}
         Gets a merchant.
@@ -282,7 +283,7 @@ class ApiClient:
 
         return StrexMerchant(**response.json())
 
-    def save_strex_merchant(self, strex_merchant: StrexMerchant):
+    def save_strex_merchant(self, strex_merchant):
         """
         PUT /api/strex/merchants/{merchantId}
         Creates/updates a merchant.
@@ -309,7 +310,7 @@ class ApiClient:
         response = self.client.delete(self.STREX_MERCHANTS + "/" + merchant_id)
         response.raise_for_status()
 
-    def create_one_time_password(self, one_time_password: OneTimePassword):
+    def create_one_time_password(self, one_time_password):
         """
         POST /api/strex/one-time-passwords
         :return:
@@ -331,7 +332,7 @@ class ApiClient:
         response = self.client.post(self.STREX_ONE_TIME_PASSWORDS, one_time_password)
         response.raise_for_status()
 
-    def get_one_time_password(self, transaction_id) -> OneTimePassword:
+    def get_one_time_password(self, transaction_id):
         """
         GET /api/strex/one-time-passwords/{transactionId}
 
@@ -345,7 +346,7 @@ class ApiClient:
 
         return OneTimePassword(**response.json())
 
-    def create_strex_transaction(self, transaction: StrexTransaction) -> str:
+    def create_strex_transaction(self, transaction):
         """
         POST /api/strex/transactions
         :return str:
@@ -356,7 +357,7 @@ class ApiClient:
 
         return self._get_id_from_header(response.headers)
 
-    def get_strex_transaction(self, transaction_id: str) -> StrexTransaction:
+    def get_strex_transaction(self, transaction_id):
         """
         GET /api/strex/transactions/{transactionId}
         :return:
@@ -367,7 +368,7 @@ class ApiClient:
 
         return StrexTransaction(**response.json())
 
-    def delete_strex_transaction(self, transaction_id: str):
+    def delete_strex_transaction(self, transaction_id):
         """
         DELETE /api/strex/transactions/{transactionId}
         :param transaction_id:
@@ -379,7 +380,7 @@ class ApiClient:
 
     ### PublicKey controller  ###
 
-    def get_server_public_key(self, key_name: str) -> PublicKey:
+    def get_server_public_key(self, key_name):
         """
         GET /api/server/public-keys/{key_name}
         :param key_name:
@@ -400,7 +401,7 @@ class ApiClient:
 
         return PublicKey.from_list(response.json())
 
-    def get_client_public_key(self, key_name: str) -> PublicKey:
+    def get_client_public_key(self, key_name):
         """
         GET /api/client/public-keys/{key_name}
         :return: Dict
@@ -410,7 +411,7 @@ class ApiClient:
 
         return PublicKey(**response.json())
 
-    def delete_client_public_key(self, key_name: str):
+    def delete_client_public_key(self, key_name):
         """
         DELETE /api/client/public-keys/{key_name}
         :return:

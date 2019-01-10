@@ -2,7 +2,7 @@ from .model import Model
 
 class LookupResult(Model):
 
-    def _accepted_params(self) -> list:
+    def _accepted_params(self):
         return [
             'created',
             'msisdn',

@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+source test_secrets.sh
+
+python2 -m pytest -v -x --capture=no

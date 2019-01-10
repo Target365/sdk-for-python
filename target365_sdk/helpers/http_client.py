@@ -5,9 +5,14 @@ import time
 import uuid
 import base64
 import hashlib
-import urllib
 import jsonpickle
 
+try:
+    #python2
+    from urllib import urlencode
+except ImportError:
+    #python3
+    from urllib.parse import urlencode
 
 class HttpClient:
     def __init__(self, base_uri, key_name, private_key):
@@ -21,11 +26,12 @@ class HttpClient:
         return requests.get(self._build_url(path), headers=self._get_auth_header("get", self._build_url(path)))
 
     def get_with_params(self, path, query_params):
+
         url = self._build_url(path)
         if len(query_params.keys()) > 0:
             url += "?"
 
-        absolute_uri = (url + urllib.parse.urlencode(query_params)).lower()
+        absolute_uri = (url + urlencode(query_params)).lower()
         return requests.get(
             self._build_url(path),
             params=query_params,

@@ -1,6 +1,7 @@
-from abc import ABC, abstractmethod
+from abc import ABCMeta, abstractmethod
 
 class Model:
+    __metaclass__ = ABCMeta
 
     def __init__(self, **kwargs):
         for key, value in kwargs.items():
@@ -16,9 +17,10 @@ class Model:
 
 
     @classmethod
-    def from_list(cls, items: list) -> list:
+    def from_list(cls, items):
         """
-        :param list of dictionaries:
-        :return list of models:
+        :param items:
+        :type items: list
+        :return: list
         """
         return [cls(**item) for item in items]

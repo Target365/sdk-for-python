@@ -14,5 +14,4 @@ class Keyword(Model):
             'lastModified',
             'tags',
             'customProperties',
-            'ownerAccountId',
         ]

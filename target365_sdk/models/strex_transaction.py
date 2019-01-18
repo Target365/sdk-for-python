@@ -13,13 +13,8 @@ class StrexTransaction(Model):
             'serviceCode',
             'shortNumber',
             'created',
-
             'deliveryMode',
             'statusCode',
             'accountId',
-            'strexOtpTransactionId',
-            'smscTransactionId',
-            'eTag',
             'billed',
         ]
-

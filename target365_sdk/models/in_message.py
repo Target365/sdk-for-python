@@ -18,5 +18,4 @@ class InMessage(Model):
             'created',
             'properties',
             'tags',
-            'eTag',
         ]

@@ -29,9 +29,4 @@ class OutMessage(Model):
             'billed',
             'tags',
             'properties',
-
-            'eTag',
-            'proxyETag',
-            'subMessageInfos',
-            'PartitionKey',
         ]

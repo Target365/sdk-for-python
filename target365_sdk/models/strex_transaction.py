@@ -11,6 +11,7 @@ class StrexTransaction(Model):
             'price',
             'shortNumber',
             'recipient',
+            'oneTimePassword',
             'content',
             'serviceCode',
             'created',

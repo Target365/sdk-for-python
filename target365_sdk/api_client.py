@@ -46,7 +46,7 @@ class ApiClient:
 
     ###  Lookup controller  ###
 
-    def loopup(self, msisdn):
+    def lookup(self, msisdn):
         """
         GET /api/lookup
         Looks up address info on a mobile phone number.

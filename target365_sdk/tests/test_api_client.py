@@ -145,7 +145,7 @@ def test_get_in_message(client, valid_short_number_id, transaction_id):
 
 
 def test_lookup_should_return_result(client):
-    assert client.loopup("+4798079008") is not None
+    assert client.lookup("+4798079008") is not None
 
 
 def test_strex_merchant_sequence(client, valid_short_number_id):

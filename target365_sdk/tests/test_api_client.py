@@ -81,7 +81,6 @@ def test_keyword_sequence(client, valid_short_number_id):
     assert client.get_keyword(str(created_id)) is None
 
 
-@pytest.mark.testnow
 def test_out_message_sequence(client, valid_short_number_id):
 
     # Test alternative instantiation via constructor to ensure nested
@@ -200,15 +199,13 @@ def test_strex_merchant_sequence(client, valid_short_number_id):
     # delete
     client.delete_strex_merchant(merchant_id)
 
-@pytest.mark.skip
+
 def test_create_one_time_password(client, random_transaction_id):
-    # TODO getting this API error dispite trying differnt transactionId and phone numbers
-    # {"Message":"One-time password for '5891c278-020f-4147-bef0-5d0662da3d7a' already exists."}
     one_time_password_data = {
-        'transactionId': 'b3c14aab-90ce-4273-b50e-db2bf52c071e',
+        'transactionId': random_transaction_id,
         'merchantId': 'mer_test',
-        'recipient': '+4798079009',
-        'sender': 'Test4',
+        'recipient': '+4798079008',
+        'sender': 'Test',
         'recurring': False
     }
 

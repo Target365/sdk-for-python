@@ -39,7 +39,7 @@ class HttpClient:
         )
 
     def post(self, path, body):
-        json_encoded = jsonpickle.encode(body)
+        json_encoded = jsonpickle.encode(body, unpicklable=False)
         return requests.post(
             self._build_url(path),
             data=json_encoded,
@@ -47,7 +47,7 @@ class HttpClient:
         )
 
     def put(self, path, body):
-        json_encoded = jsonpickle.encode(body)
+        json_encoded = jsonpickle.encode(body,  unpicklable=False)
         return requests.put(
             self._build_url(path),
             data=json_encoded,

@@ -1,6 +1,21 @@
 from .model import Model
+from .out_message_strex import OutMessageStrex
 
 class OutMessage(Model):
+
+    def _init_preprocess(self, args):
+
+        # NOTE args.strex could already be a model (passed in by programmer to construsctor)
+        # or it could be a dict (passed during JSON deserialization process also via constructor)
+        # In this case we will convert it to a model
+
+        if 'strex' in args:
+            if type(args['strex']) != OutMessageStrex:
+                strex = OutMessageStrex(**args['strex'])
+                setattr(self, 'strex', strex)
+                del args['strex']
+
+        return args
 
 
     def _accepted_params(self):
@@ -16,17 +31,18 @@ class OutMessage(Model):
             'priority',
             'deliveryMode',
 
-            # only used for STREX messages
-            'merchantId',
-            'serviceCode',
-            'invoiceText',
-            'price',
+            'strex', # OutMessageStrex class
 
             'lastModified',
             'created',
             'statusCode',
             'delivered',
-            'billed',
+
             'tags',
             'properties',
+
+            'PartitionKey', # TODO the API is going to be changed to stop returning this property
+            'subMessageInfos', # TODO the API is going to be changed to stop returning this property
+            'eTag', # TODO the API is going to be changed to stop returning this property
+            'proxyETag', # TODO the API is going to be changed to stop returning this property
         ]

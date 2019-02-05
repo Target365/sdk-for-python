@@ -6,6 +6,7 @@ from datetime import timedelta
 from ..api_client import ApiClient
 from ..models.keyword import Keyword
 from ..models.out_message import OutMessage
+from ..models.out_message_strex import OutMessageStrex
 from ..models.strex_merchant import StrexMerchant
 from ..models.one_time_password import OneTimePassword
 from ..models.strex_transaction import StrexTransaction
@@ -81,11 +82,38 @@ def test_keyword_sequence(client, valid_short_number_id):
 
 
 def test_out_message_sequence(client, valid_short_number_id):
+
+    # Test alternative instantiation via constructor to ensure nested
+    # models populate correctly
+    out_message_alt_data = {
+            'sender': '0000',
+            'strex': {
+                'merchantId': 'mer_test',
+                'serviceCode': '14002'
+            }
+        }
+
+    out_message_alt = OutMessage(
+        **out_message_alt_data
+    )
+
+    assert type(out_message_alt.strex) == OutMessageStrex
+    assert out_message_alt.strex.merchantId == 'mer_test'
+
     tomorrow = _add_days(datetime.utcnow(), 1)
     formatted = _format_datetime(tomorrow)
 
+    # This is a nested model inside the OutMessage model
+    out_message_strex = OutMessageStrex()
+    out_message_strex.merchantId = 'mer_test'
+    out_message_strex.serviceCode = '14002'
+    out_message_strex.invoiceText = 'This is my invoice text'
+    out_message_strex.price = 89.95
+    # out_message_strex.billed is read only
+
     # create
     out_message = OutMessage()
+    out_message.strex = out_message_strex
     out_message.sender = "0000"
     out_message.recipient = "+4798079008"
     out_message.content = "Hi! This is a message from 0000 :)"
@@ -94,6 +122,9 @@ def test_out_message_sequence(client, valid_short_number_id):
 
     # get
     fetched = client.get_out_message(identifier)
+
+    assert type(fetched.strex) == OutMessageStrex
+
     fetched.content += fetched.content
 
     # update

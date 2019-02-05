@@ -26,7 +26,7 @@ Please feel free to raise an issue against this repository if you have any quest
 New contributors to this project are welcome. If you are interested in contributing please
 send an email to support@target365.no.
 
-##### Automated Tests
+### Automated Tests
 
 Automated tests requires `pytest` framework. There is a useful script `/test` which you may find helpful
 when running tests. In order to use this script, you should make a copy of `test_secrets.example.sh`

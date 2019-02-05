@@ -21,8 +21,4 @@ class StrexTransaction(Model):
             'billed',
             'properties',
             'tags',
-
-            'strexOtpTransactionId',  # TODO the API is going to be changed to stop returning this property
-            'smscTransactionId',  # TODO the API is going to be changed to stop returning this property
-            'eTag',  # TODO the API is going to be changed to stop returning this property
         ]

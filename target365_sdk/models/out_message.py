@@ -30,19 +30,11 @@ class OutMessage(Model):
             'timeToLive',
             'priority',
             'deliveryMode',
-
             'strex', # OutMessageStrex class
-
             'lastModified',
             'created',
             'statusCode',
             'delivered',
-
             'tags',
             'properties',
-
-            'PartitionKey', # TODO the API is going to be changed to stop returning this property
-            'subMessageInfos', # TODO the API is going to be changed to stop returning this property
-            'eTag', # TODO the API is going to be changed to stop returning this property
-            'proxyETag', # TODO the API is going to be changed to stop returning this property
         ]

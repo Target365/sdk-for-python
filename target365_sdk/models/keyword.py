@@ -14,5 +14,4 @@ class Keyword(Model):
             'lastModified',
             'tags',
             'customProperties',
-            'ownerAccountId', # TODO the API is going to be changed to stop returning this property
         ]

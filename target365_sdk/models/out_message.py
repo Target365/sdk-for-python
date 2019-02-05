@@ -30,6 +30,7 @@ class OutMessage(Model):
             'timeToLive',
             'priority',
             'deliveryMode',
+            'allowUnicode', # TRUE to allow unicode SMS, FALSE to fail if content is unicode, NULL to replace unicode chars to '?'
             'strex', # OutMessageStrex class
             'lastModified',
             'created',

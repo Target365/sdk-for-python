@@ -18,5 +18,4 @@ class InMessage(Model):
             'created',
             'properties',
             'tags',
-            'eTag',  # TODO the API is going to be changed to stop returning this property
         ]

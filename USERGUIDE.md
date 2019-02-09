@@ -32,7 +32,7 @@ The SDK also implements very high security (ECDsaP256 HMAC).
 import pytest
 import os
 import uuid
-import target365-sdk
+import target365_sdk
 
 base_url = "https://shared.target365.io"
 key_name = "YOUR_KEY"

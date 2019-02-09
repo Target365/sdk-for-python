@@ -37,7 +37,7 @@ import target365-sdk
 base_url = "https://shared.target365.io"
 key_name = "YOUR_KEY"
 private_key = "BASE64_EC_PRIVATE_KEY"
-service_client = ApiClient(base_url, key_name, private_key)
+target365_client = ApiClient(base_url, key_name, private_key)
 ```
 ## Text messages
 
@@ -50,7 +50,7 @@ out_message.sender = "Target365"
 out_message.recipient = "+4798079008"
 out_message.content = "Hello World from SMS!"
 
-service_client.create_out_message(out_message)
+target365_client.create_out_message(out_message)
 ```
 
 ### Schedule an SMS for later sending
@@ -65,7 +65,7 @@ out_message.recipient = "+4798079008"
 out_message.content = "Hello World from SMS!"
 out_message.sendTime = send_time.strftime('%Y-%m-%dT%H:%M:%S') + send_time.strftime('.%f')[:4] + 'Z'
 
-service_client.create_out_message(out_message)
+target365_client.create_out_message(out_message)
 ```
 
 ### Edit a scheduled SMS
@@ -74,13 +74,13 @@ This example updates a previously created scheduled SMS.
 out_message = client.get_out_message(transaction_id)
 out_message.content = out_message.content + " Extra text :)"
 
-service_client.update_out_message(out_message)
+target365_client.update_out_message(out_message)
 ```
 
 ### Delete a scheduled SMS
 This example deletes a previously created scheduled SMS.
 ```Python
-service_client.delete_out_message(transaction_id)
+target365_client.delete_out_message(transaction_id)
 ```
 
 ## Payment transactions
@@ -97,7 +97,7 @@ transaction.price = 1
 transaction.serviceCode = "14002"
 transaction.invoiceText = "Donation test"
 
-service_client.create_strex_transaction(transaction)
+target365_client.create_strex_transaction(transaction)
 ```
 
 ### Create a Strex payment transaction with one-time password
@@ -126,20 +126,20 @@ transaction.serviceCode = "14002"
 transaction.invoiceText = "Donation test"
 transaction.oneTimePassword = "ONE_TIME_PASSWORD_FROM_USER"
 
-service_client.create_strex_transaction(transaction)
+target365_client.create_strex_transaction(transaction)
 ```
 
 ### Reverse a Strex payment transaction
 This example reverses a previously billed Strex payment transaction. The original transaction will not change, but a reversal transaction will be created that counters the previous transaction by a negative Price. The reversal is an asynchronous operation that usually takes a few seconds to finish.
 ```Python
-reversal_transaction_id = service_client.delete_strex_transaction(transaction_id);
+reversal_transaction_id = target365_client.delete_strex_transaction(transaction_id);
 ```
 ## Lookup
 
 ### Address lookup for mobile number
 This example looks up address information for the mobile number 98079008. Lookup information includes registered name and address.
 ```Python
-lookup = service_client.lookup("+4798079008")
+lookup = target365_client.lookup("+4798079008")
 first_name = lookup.firstName
 last_name = lookup.lastName
 ```
@@ -157,13 +157,13 @@ keyword.mode = "Text"
 keyword.forwardUrl = "https://your-site.net/api/receive-sms"
 keyword.enabled = True
 
-keyword_id = service_client.create_keyword(keyword)
+keyword_id = target365_client.create_keyword(keyword)
 ```
 
 ### Delete a keyword
 This example deletes a keyword.
 ```Python
-service_client.delete_keyword(keyword_id)
+target365_client.delete_keyword(keyword_id)
 ```
 
 ### SMS forward

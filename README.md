@@ -3,8 +3,9 @@
 
 ### Getting started
 To get started please send us an email at <support@target365.no> containing your EC public key in DER(ANS.1) format.
+If you want, you can generate your EC public/private key-pair here: <https://crypto-utils.com/>.
 
-If you want, you can generate your EC public/private key-pair here: <https://crypto-utils.com/>
+Check out our [Python User Guide](USERGUIDE.md)
 
 ### PIP
 ```

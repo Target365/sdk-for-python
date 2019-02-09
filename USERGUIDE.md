@@ -88,17 +88,14 @@ service_client.delete_out_message(transaction_id)
 ### Create a Strex payment transaction
 This example creates a 1 NOK Strex payment transaction that the end user will confirm by replying "OK" to an SMS from Strex.
 ```Python
-transaction_data = {
-    "transactionId": str(uuid.uuid4())
-    "shortNumber": "2002",
-    "recipient": "+4798079008",
-    "merchantId": "YOUR_MERCHANT_ID",
-    "price": 1,
-    "serviceCode": "14002",
-    "invoiceText": "Donation test",
-}
-
-transaction = StrexTransaction(**transaction_data)
+transaction = StrexTransaction()
+transaction.transactionId = str(uuid.uuid4())
+transaction.shortNumber = "2002"
+transaction.recipient = "+4798079008"
+transaction.merchantId = "YOUR_MERCHANT_ID"
+transaction.price = 1
+transaction.serviceCode = "14002"
+transaction.invoiceText = "Donation test"
 
 service_client.create_strex_transaction(transaction)
 ```
@@ -108,32 +105,26 @@ This example creates a Strex one-time password sent to the end user and get comp
 ```Python
 transaction_id = str(uuid.uuid4());
 
-one_time_password_data = {
-    'transactionId': transaction_id,
-    'sender': 'Target365',
-    'recipient': '+4798079008',
-    'merchantId': 'YOUR_MERCHANT_ID',
-    'recurring': False
-}
-
-one_time_password = OneTimePassword(**one_time_password_data)
+one_time_password = OneTimePassword()
+one_time_password.transactionId = transaction_id
+one_time_password.sender = "Target365"
+one_time_password.recipient = "+4798079008"
+one_time_password.merchantId = "YOUR_MERCHANT_ID"
+one_time_password.recurring = False
 
 client.create_one_time_password(one_time_password)
 
 # *** Get input from end user (eg. via web site) ***
 
-transaction_data = {
-    "transactionId": transaction_id,
-    "shortNumber": "2002",
-    "recipient": "+4798079008",
-    "merchantId": "YOUR_MERCHANT_ID",
-    "price": 1,
-    "serviceCode": "14002",
-    "invoiceText": "Donation test",
-    "oneTimePassword": "ONE_TIME_PASSWORD_FROM_USER",
-}
-
-transaction = StrexTransaction(**transaction_data)
+transaction = StrexTransaction()
+transaction.transactionId = transaction_id
+transaction.shortNumber = "2002"
+transaction.recipient = "+4798079008"
+transaction.merchantId = "YOUR_MERCHANT_ID"
+transaction.price = 1
+transaction.serviceCode = "14002"
+transaction.invoiceText = "Donation test"
+transaction.oneTimePassword = "ONE_TIME_PASSWORD_FROM_USER"
 
 service_client.create_strex_transaction(transaction)
 ```

@@ -3,7 +3,7 @@ from abc import ABCMeta, abstractmethod
 class Model:
     __metaclass__ = ABCMeta
 
-    def __init__(self, **kwargs):
+    def __init__(self, validate_keys=True, **kwargs):
 
         args = self._init_preprocess(kwargs)
 
@@ -12,7 +12,7 @@ class Model:
 
         for key, value in args.items():
 
-            if key not in self._accepted_params():
+            if validate_keys and key not in self._accepted_params():
                 raise Exception('This model does not allow parameter `' + key + '`')
 
             setattr(self, key, value)

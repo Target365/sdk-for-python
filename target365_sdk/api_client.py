@@ -366,7 +366,7 @@ class ApiClient:
         response = self.client.get(self.STREX_TRANSACTIONS + '/' + transaction_id)
         response.raise_for_status()
 
-        return StrexTransaction(**response.json())
+        return StrexTransaction(validate_keys=False, **response.json())
 
     def delete_strex_transaction(self, transaction_id):
         """

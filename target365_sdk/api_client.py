@@ -63,7 +63,7 @@ class ApiClient:
 
         response.raise_for_status()
 
-        lookup_result = LookupResult(**response.json())
+        lookup_result = LookupResult(validate_keys=False, **response.json())
         return lookup_result
 
     ###  Keyword controller  ###
@@ -118,7 +118,7 @@ class ApiClient:
 
         response.raise_for_status()
         
-        return Keyword(**response.json())
+        return Keyword(validate_keys=False, **response.json())
 
     def update_keyword(self, keyword):
         """
@@ -204,7 +204,7 @@ class ApiClient:
 
         response.raise_for_status()
 
-        return OutMessage(**response.json())
+        return OutMessage(validate_keys=False, **response.json())
 
     def update_out_message(self, out_message):
         """
@@ -249,7 +249,7 @@ class ApiClient:
         response = self.client.get(self.IN_MESSAGES + "/" + short_number_id + "/" + transaction_id)
         response.raise_for_status()
 
-        return InMessage(**response.json())
+        return InMessage(validate_keys=False, **response.json())
 
 
     ###  StrexMerchants controller  ###
@@ -281,7 +281,7 @@ class ApiClient:
 
         response.raise_for_status()
 
-        return StrexMerchant(**response.json())
+        return StrexMerchant(validate_keys=False, **response.json())
 
     def save_strex_merchant(self, strex_merchant):
         """
@@ -344,7 +344,7 @@ class ApiClient:
         response.raise_for_status()
 
 
-        return OneTimePassword(**response.json())
+        return OneTimePassword(validate_keys=False, **response.json())
 
     def create_strex_transaction(self, transaction):
         """
@@ -389,7 +389,7 @@ class ApiClient:
         response = self.client.get(self.SERVER_PUBLIC_KEYS + '/' + key_name)
         response.raise_for_status()
 
-        return PublicKey(**response.json())
+        return PublicKey(validate_keys=False, **response.json())
 
     def get_client_public_keys(self):
         """
@@ -409,7 +409,7 @@ class ApiClient:
         response = self.client.get(self.CLIENT_PUBLIC_KEYS + '/' + key_name)
         response.raise_for_status()
 
-        return PublicKey(**response.json())
+        return PublicKey(validate_keys=False, **response.json())
 
     def delete_client_public_key(self, key_name):
         """

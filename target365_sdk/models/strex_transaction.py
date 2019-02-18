@@ -17,6 +17,7 @@ class StrexTransaction(Model):
             'created',
             'deliveryMode',
             'statusCode',
+            'detailedStatusCode',
             'accountId',
             'billed',
             'properties',

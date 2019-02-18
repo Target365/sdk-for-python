@@ -43,4 +43,4 @@ class Model:
         :type items: list
         :return: list
         """
-        return [cls(**item) for item in items]
+        return [cls(validate_keys=False, **item) for item in items]

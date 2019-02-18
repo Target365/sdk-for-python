@@ -63,7 +63,7 @@ class ApiClient:
 
         response.raise_for_status()
 
-        lookup_result = LookupResult(validate_keys=False, **response.json())
+        lookup_result = LookupResult(**response.json())
         return lookup_result
 
     ###  Keyword controller  ###
@@ -118,7 +118,7 @@ class ApiClient:
 
         response.raise_for_status()
         
-        return Keyword(validate_keys=False, **response.json())
+        return Keyword(**response.json())
 
     def update_keyword(self, keyword):
         """
@@ -204,7 +204,7 @@ class ApiClient:
 
         response.raise_for_status()
 
-        return OutMessage(validate_keys=False, **response.json())
+        return OutMessage(**response.json())
 
     def update_out_message(self, out_message):
         """
@@ -249,7 +249,7 @@ class ApiClient:
         response = self.client.get(self.IN_MESSAGES + "/" + short_number_id + "/" + transaction_id)
         response.raise_for_status()
 
-        return InMessage(validate_keys=False, **response.json())
+        return InMessage(**response.json())
 
 
     ###  StrexMerchants controller  ###
@@ -281,7 +281,7 @@ class ApiClient:
 
         response.raise_for_status()
 
-        return StrexMerchant(validate_keys=False, **response.json())
+        return StrexMerchant(**response.json())
 
     def save_strex_merchant(self, strex_merchant):
         """
@@ -344,7 +344,7 @@ class ApiClient:
         response.raise_for_status()
 
 
-        return OneTimePassword(validate_keys=False, **response.json())
+        return OneTimePassword(**response.json())
 
     def create_strex_transaction(self, transaction):
         """
@@ -366,7 +366,7 @@ class ApiClient:
         response = self.client.get(self.STREX_TRANSACTIONS + '/' + transaction_id)
         response.raise_for_status()
 
-        return StrexTransaction(validate_keys=False, **response.json())
+        return StrexTransaction(**response.json())
 
     def delete_strex_transaction(self, transaction_id):
         """
@@ -389,7 +389,7 @@ class ApiClient:
         response = self.client.get(self.SERVER_PUBLIC_KEYS + '/' + key_name)
         response.raise_for_status()
 
-        return PublicKey(validate_keys=False, **response.json())
+        return PublicKey(**response.json())
 
     def get_client_public_keys(self):
         """
@@ -409,7 +409,7 @@ class ApiClient:
         response = self.client.get(self.CLIENT_PUBLIC_KEYS + '/' + key_name)
         response.raise_for_status()
 
-        return PublicKey(validate_keys=False, **response.json())
+        return PublicKey(**response.json())
 
     def delete_client_public_key(self, key_name):
         """

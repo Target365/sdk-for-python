@@ -20,6 +20,8 @@ class StrexTransaction(Model):
             'detailedStatusCode',
             'accountId',
             'billed',
+            'resultCode',
+            'resultDescription',
             'properties',
             'tags',
         ]

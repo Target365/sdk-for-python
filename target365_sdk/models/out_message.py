@@ -35,6 +35,7 @@ class OutMessage(Model):
             'lastModified',
             'created',
             'statusCode',
+            'detailedStatusCode',
             'delivered',
             'tags',
             'properties',

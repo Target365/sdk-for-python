@@ -214,7 +214,7 @@ def test_create_one_time_password(client, random_transaction_id):
     client.create_one_time_password(one_time_password)
 
 
-def test_get_time_password(client, transaction_id):
+def test_get_one_time_password(client, transaction_id):
     one_time_password = client.get_one_time_password(transaction_id)
 
     assert one_time_password.transactionId == transaction_id
@@ -222,15 +222,14 @@ def test_get_time_password(client, transaction_id):
 
 def test_strex_transaction_sequence(client, random_transaction_id):
     strex_transaction_data = {
-        "created": "2018-11-02T12:00:00Z",
         "invoiceText": "Thank you for your donation",
-        "lastModified": "2018-11-02T12:00:00Z",
         "merchantId": "mer_test",
         "price": 10,
         "recipient": "+4798079008",
         "serviceCode": "14002",
         "shortNumber": "2001",
-        "transactionId": random_transaction_id
+        "transactionId": random_transaction_id,
+        "oneTimePassword": "1234"
     }
 
     strex_transaction = StrexTransaction(**strex_transaction_data)

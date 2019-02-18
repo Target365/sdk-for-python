@@ -3,7 +3,7 @@ from abc import ABCMeta, abstractmethod
 class Model:
     __metaclass__ = ABCMeta
 
-    def __init__(self, validate_keys=True, **kwargs):
+    def __init__(self, **kwargs):
 
         args = self._init_preprocess(kwargs)
 
@@ -11,12 +11,8 @@ class Model:
             raise Exception('_init_preprocess() must return a dict')
 
         for key, value in args.items():
-
-            if validate_keys and key not in self._accepted_params():
-                raise Exception('This model does not allow parameter `' + key + '`')
-
-            setattr(self, key, value)
-
+            if key in self._accepted_params():
+                setattr(self, key, value)
 
     def _init_preprocess(self, args):
         """
@@ -43,4 +39,4 @@ class Model:
         :type items: list
         :return: list
         """
-        return [cls(validate_keys=False, **item) for item in items]
+        return [cls(**item) for item in items]

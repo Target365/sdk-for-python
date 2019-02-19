@@ -10,6 +10,8 @@ from ..models.out_message_strex import OutMessageStrex
 from ..models.strex_merchant import StrexMerchant
 from ..models.one_time_password import OneTimePassword
 from ..models.strex_transaction import StrexTransaction
+from ..models.status_codes import StatusCodes
+from ..models.detailed_status_codes import DetailedStatusCodes
 
 
 @pytest.fixture
@@ -229,7 +231,7 @@ def test_strex_transaction_sequence(client, random_transaction_id):
         "serviceCode": "14002",
         "shortNumber": "2001",
         "transactionId": random_transaction_id,
-        "oneTimePassword": "1234"
+        "oneTimePassword": "9999"
     }
 
     strex_transaction = StrexTransaction(**strex_transaction_data)
@@ -239,9 +241,23 @@ def test_strex_transaction_sequence(client, random_transaction_id):
     strex_transaction = client.get_strex_transaction(random_transaction_id)
     assert strex_transaction.transactionId == random_transaction_id
 
+    # get_strex_transaction will wait up to 20 secs for trans to fininsh
+    strex_transaction = client.get_strex_transaction(random_transaction_id)
+
+    assert strex_transaction.detailedStatusCode == DetailedStatusCodes.ONE_TIME_PASSWORD_FAILED
+    strex_transaction.oneTimePassword = "1234"
+    
+    client.create_strex_transaction(strex_transaction)
+
+    # delete_strex_transaction will wait up to 20 secs for trans to finish
     client.delete_strex_transaction(random_transaction_id)
 
-
+    # reversal transaction id is always original id prefixed by '-'
+    reversal_transaction = client.get_strex_transaction("-" + random_transaction_id)
+    
+    assert reversal_transaction.statusCode == StatusCodes.REVERSED
+    
+    
 def test_get_server_public_key(client):
     public_key = client.get_server_public_key('2017-11-17')
 

@@ -241,7 +241,7 @@ def test_strex_transaction_sequence(client, random_transaction_id):
     strex_transaction = client.get_strex_transaction(random_transaction_id)
     assert strex_transaction.transactionId == random_transaction_id
 
-    # get_strex_transaction will wait up to 20 secs for trans to fininsh
+    # get_strex_transaction will wait up to 20 secs for trans to finish
     strex_transaction = client.get_strex_transaction(random_transaction_id)
 
     assert strex_transaction.detailedStatusCode == DetailedStatusCodes.ONE_TIME_PASSWORD_FAILED
@@ -249,7 +249,7 @@ def test_strex_transaction_sequence(client, random_transaction_id):
     
     client.create_strex_transaction(strex_transaction)
 
-    # delete_strex_transaction will wait up to 20 secs for trans to finish
+    # delete_strex_transaction will wait up to 20 secs if trans isn't finished
     client.delete_strex_transaction(random_transaction_id)
 
     # reversal transaction id is always original id prefixed by '-'

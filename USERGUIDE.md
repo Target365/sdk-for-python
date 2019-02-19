@@ -103,7 +103,7 @@ target365_client.create_strex_transaction(transaction)
 ### Create a Strex payment transaction with one-time password
 This example creates a Strex one-time password sent to the end user and get completes the payment by using the one-time password.
 ```Python
-transaction_id = str(uuid.uuid4());
+transaction_id = str(uuid.uuid4())
 
 one_time_password = OneTimePassword()
 one_time_password.transactionId = transaction_id
@@ -130,10 +130,14 @@ target365_client.create_strex_transaction(transaction)
 ```
 
 ### Reverse a Strex payment transaction
-This example reverses a previously billed Strex payment transaction. The original transaction will not change, but a reversal transaction will be created that counters the previous transaction by a negative Price. The reversal is an asynchronous operation that usually takes a few seconds to finish.
+This example reverses a previously billed Strex payment transaction. The original transaction will not change, but a reversal transaction will be created that counters the previous transaction by a negative Price.
+The reversal transaction id is always the same as the original id prefixed by "-".
 ```Python
-reversal_transaction_id = target365_client.delete_strex_transaction(transaction_id);
+target365_client.delete_strex_transaction(transaction_id)
+ 
+reversal_transaction = target365_client.get_strex_transaction("-" + transaction_id)
 ```
+
 ## Lookup
 
 ### Address lookup for mobile number

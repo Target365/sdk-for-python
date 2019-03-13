@@ -15,7 +15,7 @@ pip install target365-sdk
 [![python_platform](https://img.shields.io/pypi/pyversions/target365_sdk.svg)](https://pypi.org/project/target365-sdk/)
 
 ### Test Environment
-Our test-environment acts as a sandbox that simulates the real API as closely as possible. This can be used to get familiar with service before going to production. Please be ware that the simulation isn't perfect and must not be taken to have 100% fidelity.
+Our test-environment acts as a sandbox that simulates the real API as closely as possible. This can be used to get familiar with the service before going to production. Please be ware that the simulation isn't perfect and must not be taken to have 100% fidelity.
 
 #### Url: https://test.target365.io/
 

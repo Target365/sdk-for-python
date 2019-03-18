@@ -7,6 +7,8 @@ class OutMessageStrex(Model):
         return [
             'merchantId',
             'serviceCode',
+            'businessModel',
+            'smsConfirmation',
             'invoiceText',
             'price',
             'billed',

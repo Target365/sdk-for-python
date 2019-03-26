@@ -187,13 +187,15 @@ def test_strex_merchant_sequence(client, valid_short_number_id):
     # create        
     strex_merchant = StrexMerchant()
     strex_merchant.merchantId = merchant_id
-    strex_merchant.shortNumberId = valid_short_number_id
+    strex_merchant.shortNumberIds = [valid_short_number_id]
     strex_merchant.password = "abcdef"
     client.save_strex_merchant(strex_merchant)
 
     # get by id
     fetched = client.get_strex_merchant(merchant_id)
     assert fetched is not None
+    assert len(fetched.shortNumberIds) == 1
+    assert fetched.shortNumberIds[0] == valid_short_number_id
 
     # get all
     assert len(client.get_strex_merchants()) > 0

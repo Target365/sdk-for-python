@@ -20,23 +20,26 @@ class OutMessage(Model):
 
     def _accepted_params(self):
         return [
-            'id',
-            'accountId',
             'transactionId',
+            'correlationId',
+            'keywordId',
             'sender',
             'recipient',
             'content',
+            'strex', # OutMessageStrex class
+            'allowUnicode', # TRUE to allow unicode SMS, FALSE to fail if content is unicode, NULL to replace unicode chars to '?'
             'sendTime',
             'timeToLive',
             'priority',
             'deliveryMode',
-            'allowUnicode', # TRUE to allow unicode SMS, FALSE to fail if content is unicode, NULL to replace unicode chars to '?'
-            'strex', # OutMessageStrex class
-            'lastModified',
-            'created',
+            'deliveryReportUrl',
             'statusCode',
+            'smscTransactionId',
             'detailedStatusCode',
             'delivered',
+            'smscMessageParts',
             'tags',
             'properties',
+            'lastModified',
+            'created',
         ]

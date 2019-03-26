@@ -9,9 +9,11 @@ class DeliveryReport(Model):
             'price',
             'sender',
             'recipient',
-            'operator',
+            'operatorId',
             'statusCode',
             'detailedStatusCode',
             'delivered',
             'billed',
+            'smscTransactionId',
+            'smscMessageParts',
         ]

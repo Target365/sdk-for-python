@@ -5,6 +5,6 @@ class StrexMerchant(Model):
     def _accepted_params(self):
         return [
             'merchantId',
-            'shortNumberId',
+            'shortNumberIds', # Array of shortNumberId like 'NO-2002'
             'password',
         ]

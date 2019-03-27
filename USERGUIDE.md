@@ -197,6 +197,7 @@ Content-Length: 0
 ```
 
 ### DLR forward
+This example shows how delivery reports (DLR) are forwarded to the outmessage DeliveryReportUrl. All DLR forwards expect a response with status code 200 (OK). If the request times out or response status code differs the forward will be retried 10 times with exponentially longer intervals for about 15 hours.
 #### Request
 ```
 POST https://your-site.net/api/receive-dlr HTTP/1.1

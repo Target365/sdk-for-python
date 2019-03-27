@@ -19,6 +19,7 @@
     * [Create a keyword](#create-a-keyword)
     * [Delete a keyword](#delete-a-keyword)
     * [SMS forward](#sms-forward)
+    * [DLR forward](#dlr-forward)
 
 ## Introduction
 The Target365 SDK gives you direct access to our online services like sending and receiving SMS, address lookup and Strex payment transactions.
@@ -183,6 +184,36 @@ Host: your-site.net
   "sender":"+4798079008",
   "recipient":"2002",
   "content":"HELLO"
+}
+```
+
+#### Response
+```
+HTTP/1.1 200 OK
+Date: Thu, 07 Feb 2019 21:13:51 GMT
+Content-Length: 0
+```
+
+### DLR forward
+#### Request
+```
+POST https://your-site.net/api/receive-dlr HTTP/1.1
+Content-Type: application/json
+Host: your-site.net
+
+{
+    "correlationId": null,
+    "transactionId": "client-specified-id-5c88e736bb4b8",
+    "price": null,
+    "sender": "Target365",
+    "recipient": "+4798079008",
+    "operatorId": "no.telenor",
+    "statusCode": "Ok",
+    "detailedStatusCode": "Delivered",
+    "delivered": true,
+    "billed": null,
+    "smscTransactionId": "16976c7448d",
+    "smscMessageParts": 1
 }
 ```
 

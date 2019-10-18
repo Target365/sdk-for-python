@@ -61,7 +61,7 @@ class HttpClient:
         )
 
     def _build_url(self, path):
-        return (self.base_uri + path).lower()
+        return (self.base_uri + path)
 
     def _get_auth_header(self, method, uri, body=None):
         signature = self._get_signature(method, uri, body)
@@ -78,7 +78,7 @@ class HttpClient:
             base64_encoded = base64.b64encode(signature)
             content_hash = base64_encoded.decode("utf-8")
 
-        message = method + uri + str(timestamp) + str(nounce) + content_hash
+        message = method + uri.lower() + str(timestamp) + str(nounce) + content_hash
         signature_string = base64.b64encode(self.publicKey.sign(
             message.encode("utf-8"), hashfunc=hashlib.sha256))
         the_signature = self.keyName + ":" + str(timestamp) + ":" + str(nounce) + ":" + signature_string.decode("utf-8")

@@ -23,6 +23,8 @@ class StrexTransaction(Model):
             'smsConfirmation',
             'invoiceText',
             'price',
+            'tags',
+            'properties',
             'billed',
             'resultCode',
             'resultDescription',

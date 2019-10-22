@@ -97,6 +97,7 @@ transaction.merchantId = "YOUR_MERCHANT_ID"
 transaction.price = 1
 transaction.serviceCode = "14002"
 transaction.invoiceText = "Donation test"
+transaction.smsConfirmation = True
 
 target365_client.create_strex_transaction(transaction)
 ```

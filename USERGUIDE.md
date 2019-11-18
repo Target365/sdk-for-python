@@ -13,6 +13,10 @@
     * [Create a Strex payment transaction](#create-a-strex-payment-transaction)
     * [Create a Strex payment transaction with one-time password](#create-a-strex-payment-transaction-with-one-time-password)
     * [Reverse a Strex payment transaction](#reverse-a-strex-payment-transaction)
+* [One-click transactions](#one-click-transactions)
+    * [One-time transaction](#one-time-transaction)
+    * [Setup subscription transaction](#setup-subscription-transaction)
+    * [Recurring transaction](#recurring-transaction)
 * [Lookup](#lookup)
     * [Address lookup for mobile number](#address-lookup-for-mobile-number)
 * [Keywords](#keywords)
@@ -138,6 +142,61 @@ The reversal transaction id is always the same as the original id prefixed by "-
 target365_client.delete_strex_transaction(transaction_id)
  
 reversal_transaction = target365_client.get_strex_transaction("-" + transaction_id)
+```
+## One-click transactions
+
+### One-time transaction
+This example sets up a simple one-time transaction for one-click. After creation you can redirect the end-user to the one-click landing page by redirecting to http://betal.strex.no/{YOUR-ACCOUNT-ID}/{YOUR-TRANSACTION-ID} for PROD and http://strex-test.target365.io/{YOUR-ACCOUNT-ID}/{YOUR-TRANSACTION-ID} for TEST-environment.
+![one-time sequence](https://github.com/Target365/sdk-for-python/raw/master/oneclick-simple-transaction-flow.png "One-time sequence diagram")
+
+```Python
+transaction = StrexTransaction()
+transaction.transactionId = transaction_id
+transaction.shortNumber = "2002"
+transaction.merchantId = "YOUR_MERCHANT_ID"
+transaction.price = 1
+transaction.serviceCode = "14002"
+transaction.invoiceText = "Donation test"
+transaction.properties = { 'RedirectUrl': 'https://your-return-url.com?id=' + transaction_id }
+
+target365_client.create_strex_transaction(transaction)
+
+# *** TODO: Redirect end-user to one-click landing page ***
+```
+### Setup subscription transaction
+This example sets up a subscription transaction for one-click. After creation you can redirect the end-user to the one-click landing page by redirecting to http://betal.strex.no/{YOUR-ACCOUNT-ID}/{YOUR-TRANSACTION-ID} for PROD and http://strex-test.target365.io/{YOUR-ACCOUNT-ID}/{YOUR-TRANSACTION-ID} for TEST-environment.
+![subscription sequence](https://github.com/Target365/sdk-for-python/raw/master/oneclick-subscription-flow.png "Subscription sequence diagram")
+```Python
+transaction = StrexTransaction()
+transaction.transactionId = transaction_id
+transaction.shortNumber = "2002"
+transaction.merchantId = "YOUR_MERCHANT_ID"
+transaction.price = 1
+transaction.serviceCode = "14002"
+transaction.invoiceText = "Donation test"
+transaction.properties = { 'Recurring': true, 'RedirectUrl': 'https://your-site.com?id=' + transaction_id }
+
+target365_client.create_strex_transaction(transaction)
+
+# *** TODO: Redirect end-user to one-click landing page ***
+```
+### Recurring transaction
+This example sets up a recurring transaction for one-click. After creation you can immediately get the transaction to get the status code - the server will wait up to 20 seconds for the async transaction to complete.
+![Recurring sequence](https://github.com/Target365/sdk-for-python/raw/master/oneclick-recurring-flow.png "Recurring sequence diagram")
+```Python
+transaction = StrexTransaction()
+transaction.transactionId = transaction_id
+transaction.recipient = 'RECIPIENT_FROM_SUBSCRIPTION'
+transaction.shortNumber = "2002"
+transaction.merchantId = "YOUR_MERCHANT_ID"
+transaction.price = 1
+transaction.serviceCode = "14002"
+transaction.invoiceText = "Donation test"
+
+target365_client.create_strex_transaction(transaction)
+transaction = target365_client.get_strex_transaction(transaction_id)
+
+# *** TODO: Check transaction statusCode ***
 ```
 
 ## Lookup

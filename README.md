@@ -2,10 +2,53 @@
 [![License](https://img.shields.io/github/license/Target365/sdk-for-python.svg?style=flat)](https://opensource.org/licenses/MIT)
 
 ### Getting started
-To get started please send us an email at <support@target365.no> containing your EC public key in DER(ANS.1) format.
-If you want, you can generate your EC public/private key-pair here: <https://8gwifi.org/sshfunctions.jsp>.
+To get started please send us an email at <support@target365.no> containing your EC public key in PEM-format.
+You can generate your EC public/private key-pair using openssl like this:
+```
+openssl ecparam -name prime256v1 -genkey -noout -out mykey.pem
+```
+Use this openssl command to extract the public key in PEM-format:
+```
+openssl ec -in mykey.pem -pubout -out pubkey.pem
+```
+You can then send us the pubkey.pem file. The file should look something like this:
+```
+-----BEGIN PUBLIC KEY-----
+MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEuVHnFqJxiBC9I5+8a8Sx66brBCz3
+Flt70WN9l7WZ8VQVN9DZt0kW5xpiO5aG7qd5K8OcHZeoJRprFJOkBwW4Fg==
+-----END PUBLIC KEY-----
+```
+Our Python SDK takes the raw private key as a HEX string. To get the HEX private bytes you can use this command:
+```
+openssl pkey -in mykey.pem -text
+```
+This will generate an output like this:
+```
+-----BEGIN PRIVATE KEY-----
+MIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQgKdQ8xhRtsMpX3JXV
+Oot+HqcVcfCNx+ZEX2WZWw+auGahRANCAAR1LUpsVHVxSMr7cTg/Efc+Ytof8wBO
+yqwJlQWnC2sbwxdiUzBqba0WikHwSDcC6jqo8i5ANdEpRE5u090gKg0B
+-----END PRIVATE KEY-----
+Private-Key: (256 bit)
+priv:
+    29:d4:3c:c6:14:6d:b0:ca:57:dc:95:d5:3a:8b:7e:
+    1e:a7:15:71:f0:8d:c7:e6:44:5f:65:99:5b:0f:9a:
+    b8:66
+pub:
+    04:75:2d:4a:6c:54:75:71:48:ca:fb:71:38:3f:11:
+    f7:3e:62:da:1f:f3:00:4e:ca:ac:09:95:05:a7:0b:
+    6b:1b:c3:17:62:53:30:6a:6d:ad:16:8a:41:f0:48:
+    37:02:ea:3a:a8:f2:2e:40:35:d1:29:44:4e:6e:d3:
+    dd:20:2a:0d:01
+ASN1 OID: prime256v1
+NIST CURVE: P-256
+```
+Use the HEX string here displayed and just remove the colon characters in between. In this example the correct private key in HEX will be:
+```
+29d43cc6146db0ca57dc95d53a8b7e1ea71571f08dc7e6445f65995b0f9ab866
+```
 
-Check out our [Python User Guide](USERGUIDE.md)
+For more details on using the SDK we strongly suggest you check out our [Python User Guide](USERGUIDE.md).
 
 ### PIP
 ```

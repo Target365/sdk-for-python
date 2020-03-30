@@ -20,6 +20,8 @@ class StrexTransaction(Model):
             'merchantId',
             'serviceCode',
             'businessModel',
+            'age',
+            'isRestricted',
             'smsConfirmation',
             'invoiceText',
             'price',

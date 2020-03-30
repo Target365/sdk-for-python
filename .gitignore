@@ -35,6 +35,7 @@ MANIFEST
 #  before PyInstaller builds the exe, so as to inject date/other infos into it.
 *.manifest
 *.spec
+.setup*.*
 
 # Installer logs
 pip-log.txt
@@ -110,3 +111,5 @@ venv.bak/
 
 # vscode directory
 .vscode/
+/.vs
+/runtests.bat

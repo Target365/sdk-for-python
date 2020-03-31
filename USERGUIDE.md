@@ -93,6 +93,7 @@ target365_client.delete_out_message(transaction_id)
 
 ### Create a Strex payment transaction
 This example creates a 1 NOK Strex payment transaction that the end user will confirm by replying "OK" to an SMS from Strex.
+You can use message_prefix and message_suffix custom properties to influence the start and end of the SMS sent by Strex.
 ```Python
 transaction = StrexTransaction()
 transaction.transactionId = str(uuid.uuid4())
@@ -102,6 +103,7 @@ transaction.merchantId = "YOUR_MERCHANT_ID"
 transaction.price = 1
 transaction.serviceCode = "14002"
 transaction.invoiceText = "Donation test"
+transaction.properties = { 'message_prefix': 'Dear customer...', 'message_suffix': 'Best regards...' }
 transaction.smsConfirmation = True
 
 target365_client.create_strex_transaction(transaction)
@@ -109,6 +111,7 @@ target365_client.create_strex_transaction(transaction)
 
 ### Create a Strex payment transaction with one-time password
 This example creates a Strex one-time password sent to the end user and get completes the payment by using the one-time password.
+You can use MessagePrefix and MessageSuffix to influence the start and end of the SMS sent by Strex.
 ```Python
 transaction_id = str(uuid.uuid4())
 
@@ -117,6 +120,8 @@ one_time_password.transactionId = transaction_id
 one_time_password.sender = "Target365"
 one_time_password.recipient = "+4798079008"
 one_time_password.merchantId = "YOUR_MERCHANT_ID"
+one_time_password.messagePrefix = "Dear customer..."
+one_time_password.messageSuffix = "Best regards..."
 one_time_password.recurring = False
 
 client.create_one_time_password(one_time_password)

@@ -9,7 +9,9 @@ class OneTimePassword(Model):
             'recipient',
             'sender',
             'recurring',
-            'message',
+            'messagePrefix',
+            'messageSuffix',
+            'message', # deprecated
             'timeToLive',
             'created',
             'delivered',

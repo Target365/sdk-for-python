@@ -13,6 +13,7 @@ class OutMessageStrex(Model):
             'smsConfirmation',
             'invoiceText',
             'price',
+            'timeout',
             'billed',
             'resultCode',
             'resultDescription',

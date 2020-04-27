@@ -25,6 +25,7 @@ class StrexTransaction(Model):
             'smsConfirmation',
             'invoiceText',
             'price',
+            'timeout',
             'tags',
             'properties',
             'billed',

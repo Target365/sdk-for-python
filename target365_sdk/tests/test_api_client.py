@@ -110,7 +110,8 @@ def test_out_message_sequence(client, valid_short_number_id):
     out_message_strex.merchantId = 'mer_test'
     out_message_strex.serviceCode = '14002'
     out_message_strex.invoiceText = 'This is my invoice text'
-    out_message_strex.price = 89.95
+    out_message_strex.price = 9.90
+    out_message_strex.timeout = 10
     # out_message_strex.billed is read only
 
     # create
@@ -204,8 +205,9 @@ def test_get_one_time_password(client, transaction_id):
 def test_strex_transaction_sequence(client, random_transaction_id):
     strex_transaction_data = {
         "invoiceText": "Thank you for your donation",
-        "merchantId": "test",
+        "merchantId": "mer_test",
         "price": 10,
+        "timeout": 10,
         "recipient": "+4798079008",
         "serviceCode": "14002",
         "shortNumber": "0000",
@@ -219,6 +221,7 @@ def test_strex_transaction_sequence(client, random_transaction_id):
 
     strex_transaction = client.get_strex_transaction(random_transaction_id)
     assert strex_transaction.transactionId == random_transaction_id
+    assert strex_transaction.timeout == 10
 
     # get_strex_transaction will wait up to 20 secs for trans to finish
     strex_transaction = client.get_strex_transaction(random_transaction_id)

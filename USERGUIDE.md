@@ -153,8 +153,6 @@ reversal_transaction = target365_client.get_strex_transaction("-" + transaction_
 
 ## One-click
 
-## One-click
-
 ### One-click config
 This example sets up a one-click config which makes it easier to handle campaigns in one-click where most properties like merchantId, price et cetera are known in advance. You can redirect the end-user to the one-click campaign page by redirecting to http://betal.strex.no/{YOUR-CONFIG-ID} for PROD and http://test-strex.target365.io/{YOUR-CONFIG-ID} for TEST-environment. You can also set the TransactionId by adding ?id={YOUR-TRANSACTION-ID} to the URL.
 

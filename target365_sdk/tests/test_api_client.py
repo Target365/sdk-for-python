@@ -12,6 +12,7 @@ from ..models.one_time_password import OneTimePassword
 from ..models.strex_transaction import StrexTransaction
 from ..models.status_codes import StatusCodes
 from ..models.detailed_status_codes import DetailedStatusCodes
+from ..models.oneclick_config import OneClickConfig
 
 
 @pytest.fixture
@@ -212,7 +213,7 @@ def test_strex_transaction_sequence(client, random_transaction_id):
         "serviceCode": "14002",
         "shortNumber": "0000",
         "transactionId": random_transaction_id,
-        "oneTimePassword": "9999"
+        "oneTimePassword": "1234"
     }
 
     strex_transaction = StrexTransaction(**strex_transaction_data)
@@ -226,10 +227,7 @@ def test_strex_transaction_sequence(client, random_transaction_id):
     # get_strex_transaction will wait up to 20 secs for trans to finish
     strex_transaction = client.get_strex_transaction(random_transaction_id)
 
-    assert strex_transaction.detailedStatusCode == DetailedStatusCodes.ONE_TIME_PASSWORD_FAILED
-    strex_transaction.oneTimePassword = "1234"
-    
-    client.create_strex_transaction(strex_transaction)
+    assert strex_transaction.detailedStatusCode == DetailedStatusCodes.DELIVERED
 
     # delete_strex_transaction will wait up to 20 secs if trans isn't finished
     client.delete_strex_transaction(random_transaction_id)
@@ -238,8 +236,8 @@ def test_strex_transaction_sequence(client, random_transaction_id):
     reversal_transaction = client.get_strex_transaction("-" + random_transaction_id)
     
     assert reversal_transaction.statusCode == StatusCodes.REVERSED
-    
-    
+
+
 def test_get_server_public_key(client):
     public_key = client.get_server_public_key('2017-11-17')
 
@@ -257,10 +255,38 @@ def test_get_client_public_keys(client, api_key_name):
     assert found_key is True
 
 
-def test_get_client_public_key(client, api_key_name):
-    client_public_key = client.get_client_public_key(api_key_name)
+def test_create_oneclick_config(client):
+    config_data = {
+				"configId": "APITEST",
+				"shortNumber": "0000",
+				"price": 99,
+				"merchantId": "mer_test",
+				"businessModel": "STREX-PAYMENT",
+				"serviceCode": "14002",
+				"invoiceText": "Donation test",
+				"onlineText": "Buy directly",
+				"offlineText": "Buy with PIN-code",
+				"redirectUrl": "https://tempuri.org/php",
+				"recurring": False,
+				"isRestricted": False,
+				"age": 0,
+    }
 
-    assert client_public_key.name == api_key_name
+    config = OneClickConfig(**config_data)
+
+    client.save_oneclick_config(config)
+
+
+def test_get_oneclick_config(client):
+    config = client.get_oneclick_config("APITEST")
+
+    assert config.configId == "APITEST"
+
+
+def test_get_one_time_password(client, transaction_id):
+    one_time_password = client.get_one_time_password(transaction_id)
+
+    assert one_time_password.transactionId == transaction_id
 
 
 # Formats datetime object into utc string

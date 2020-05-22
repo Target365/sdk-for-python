@@ -7,6 +7,7 @@ from .models.in_message import InMessage
 from .models.one_time_password import OneTimePassword
 from .models.strex_transaction import StrexTransaction
 from .models.public_key import PublicKey
+from .models.oneclick_config import OneClickConfig
 
 
 name = "target365_sdk"
@@ -24,6 +25,7 @@ class ApiClient:
     STREX_ONE_TIME_PASSWORDS = "api/strex/one-time-passwords"
     SERVER_PUBLIC_KEYS = "api/server/public-keys"
     CLIENT_PUBLIC_KEYS = "api/client/public-keys"
+    ONECLICK_CONFIGS = "api/one-click/configs"
 
     NOT_FOUND = 404
 
@@ -417,6 +419,40 @@ class ApiClient:
         :return:
         """
         response = self.client.delete(self.CLIENT_PUBLIC_KEYS + '/' + key_name)
+        response.raise_for_status()
+
+    def get_oneclick_config(self, config_id):
+        """
+        GET /api/oneclick/configs/{configId}
+        Gets a one-click config.
+        :configId: string
+        :returns: OneClickConfig
+        """
+        if config_id is None:
+            raise ValueError("configId")
+
+        response = self.client.get(self.ONECLICK_CONFIGS + "/" + config_id)
+
+        if response.status_code == self.NOT_FOUND:
+            return None
+
+        response.raise_for_status()
+
+        return OneClickConfig(**response.json())
+
+    def save_oneclick_config(self, config):
+        """
+        PUT /api/one-click/configs/{configId}
+        Creates/updates a one-click config.
+        :config: OneClickConfig
+        """
+        if config is None:
+            raise ValueError("config")
+        if config.configId is None:
+            raise ValueError("configId")
+
+        # expecting http 204 response (no content)
+        response = self.client.put(self.ONECLICK_CONFIGS + "/" + config.configId, config)
         response.raise_for_status()
 
     # noinspection PyMethodMayBeStatic,PyMethodMayBeStatic

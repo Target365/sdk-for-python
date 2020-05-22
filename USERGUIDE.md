@@ -13,7 +13,8 @@
     * [Create a Strex payment transaction](#create-a-strex-payment-transaction)
     * [Create a Strex payment transaction with one-time password](#create-a-strex-payment-transaction-with-one-time-password)
     * [Reverse a Strex payment transaction](#reverse-a-strex-payment-transaction)
-* [One-click transactions](#one-click-transactions)
+* [One-click](#one-click)
+    * [One-click config](#one-click-config)
     * [One-time transaction](#one-time-transaction)
     * [Setup subscription transaction](#setup-subscription-transaction)
     * [Recurring transaction](#recurring-transaction)
@@ -149,7 +150,32 @@ target365_client.delete_strex_transaction(transaction_id)
  
 reversal_transaction = target365_client.get_strex_transaction("-" + transaction_id)
 ```
-## One-click transactions
+
+## One-click
+
+## One-click
+
+### One-click config
+This example sets up a one-click config which makes it easier to handle campaigns in one-click where most properties like merchantId, price et cetera are known in advance. You can redirect the end-user to the one-click campaign page by redirecting to http://betal.strex.no/{YOUR-CONFIG-ID} for PROD and http://test-strex.target365.io/{YOUR-CONFIG-ID} for TEST-environment. You can also set the TransactionId by adding ?id={YOUR-TRANSACTION-ID} to the URL.
+
+```Python
+config_data = OneClickConfig()
+config.configId = "YOUR_CONFIG_ID"
+config.shortNumber = "2002"
+config.price = 99
+config.merchantId = "YOUR_MERCHANT_ID"
+config.businessModel = "STREX-PAYMENT"
+config.serviceCode = "14002"
+config.invoiceText = "Donation test"
+config.onlineText = "Buy directly"
+config.offlineText = "Buy with PIN-code"
+config.redirectUrl = "https://your-return-url.com?id={TransactionId}" # Placeholder {TransactionId} is replaced by actual id
+config.recurring = False
+config.isRestricted = False
+config.age = 0
+
+target365_client.save_oneclick_config(config)
+```
 
 ### One-time transaction
 This example sets up a simple one-time transaction for one-click. After creation you can redirect the end-user to the one-click landing page by redirecting to http://betal.strex.no/{YOUR-ACCOUNT-ID}/{YOUR-TRANSACTION-ID} for PROD and http://test-strex.target365.io/{YOUR-ACCOUNT-ID}/{YOUR-TRANSACTION-ID} for TEST-environment.

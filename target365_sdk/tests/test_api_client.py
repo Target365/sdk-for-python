@@ -170,8 +170,11 @@ def test_out_message_sequence(client, valid_short_number_id):
     client.delete_out_message(str(t3))
 
 
-def test_out_message_export:
-
+def test_out_message_export(client):
+    from_date = "2020-08-22T00:00:00Z"
+    to_date = "2020-08-23T00:00:00Z"
+    csv = client.get_out_message_export(from_date, to_date)
+    assert csv.startswith("SendTime,Sender,Recipient,MessageParts,StatusCode,DetailedStatusCode,Operator,Tags") is True
 
 def test_prepare_msisdns(client):
     client.prepare_msisdns(["+4798079008"])

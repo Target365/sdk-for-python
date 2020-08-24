@@ -18,7 +18,7 @@ class ApiClient:
     LOOKUP = "api/lookup"
     KEYWORDS = "api/keywords"
     OUT_MESSAGES = "api/out-messages"
-    OUT_MESSAGE_EXPORT = "api/export/out-message"
+    OUT_MESSAGE_EXPORT = "api/export/out-messages"
     IN_MESSAGES = "api/in-messages"
     PREPARE_MSISDNS = "api/prepare-msisdns"
     STREX_MERCHANTS = "api/strex/merchants"
@@ -236,15 +236,15 @@ class ApiClient:
         response = self.client.delete(self.OUT_MESSAGES + "/" + transaction_id)
         response.raise_for_status()
 
-    def get_out_message_export(self, from, to):
+    def get_out_message_export(self, from_date, to_date):
         """
         GET /api/export/out-messages
         Gets out-message export in CSV format
-        :from: From datetime in UTC
-        :to: To datetime in UTC
+        :from_date: From datetime in UTC
+        :to_date: To datetime in UTC
         :return: string containing CSV data
         """
-        payload = {"from": msisdn, "to": to}
+        payload = {"from": from_date, "to": to_date}
         response = self.client.get_with_params(self.OUT_MESSAGE_EXPORT, payload)
         response.raise_for_status()
         return response.text

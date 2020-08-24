@@ -170,6 +170,9 @@ def test_out_message_sequence(client, valid_short_number_id):
     client.delete_out_message(str(t3))
 
 
+def test_out_message_export:
+
+
 def test_prepare_msisdns(client):
     client.prepare_msisdns(["+4798079008"])
 

@@ -24,6 +24,7 @@ class ApiClient:
     STREX_MERCHANTS = "api/strex/merchants"
     STREX_TRANSACTIONS = "api/strex/transactions"
     STREX_ONE_TIME_PASSWORDS = "api/strex/one-time-passwords"
+    STREX_REGISTRATION_SMS = "api/strex/registrationsms"
     SERVER_PUBLIC_KEYS = "api/server/public-keys"
     CLIENT_PUBLIC_KEYS = "api/client/public-keys"
     ONECLICK_CONFIGS = "api/one-click/configs"
@@ -39,7 +40,7 @@ class ApiClient:
         """
         GET /api/ping
         Pings the service and returns a hello message
-        :return: return description
+        :return: returns string 'pong'
         """
 
         response = self.client.get(self.PING)
@@ -268,7 +269,7 @@ class ApiClient:
         return InMessage(**response.json())
 
 
-    ###  StrexMerchants controller  ###
+    ###  Strex controller  ###
 
     def get_strex_merchants(self):
         """
@@ -352,7 +353,7 @@ class ApiClient:
         """
         GET /api/strex/one-time-passwords/{transactionId}
 
-        :param transaction_id:
+        :param transaction_id: string
         :return: OneTimePassword
         """
 
@@ -391,6 +392,18 @@ class ApiClient:
         :return:
         """
         response = self.client.delete(self.STREX_TRANSACTIONS + '/' + transaction_id)
+        response.raise_for_status()
+
+    def send_strex_registration_sms(self, strex_registration_sms):
+        """
+        POST /api/strex/registrationsms
+        Initiates Strex-registation by SMS.
+        :strex_registration_sms: Strex registration SMS.
+        :return:
+        """
+        if strex_registration_sms is None:
+            raise ValueError("strex_registration_sms")
+        response = self.client.post(self.STREX_REGISTRATION_SMS, strex_registration_sms)
         response.raise_for_status()
 
 

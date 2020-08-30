@@ -235,8 +235,8 @@ def test_strex_transaction_sequence(client, random_transaction_id):
 
     assert strex_transaction.detailedStatusCode == DetailedStatusCodes.DELIVERED
 
-    # delete_strex_transaction will wait up to 20 secs if trans isn't finished
-    client.delete_strex_transaction(random_transaction_id)
+    # reverse_strex_transaction will wait up to 20 secs if trans isn't finished
+    client.reverse_strex_transaction(random_transaction_id)
 
     # reversal transaction id is always original id prefixed by '-'
     reversal_transaction = client.get_strex_transaction("-" + random_transaction_id)

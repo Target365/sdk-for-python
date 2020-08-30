@@ -9,9 +9,7 @@ from .models.strex_transaction import StrexTransaction
 from .models.public_key import PublicKey
 from .models.oneclick_config import OneClickConfig
 
-
 name = "target365_sdk"
-
 
 class ApiClient:
     PING = "api/ping"
@@ -34,13 +32,10 @@ class ApiClient:
     def __init__(self, base_uri, key_name, private_key):
         self.client = HttpClient(base_uri, key_name, private_key)
 
-    ###  Ping controller  ###
-
     def ping(self):
         """
-        GET /api/ping
-        Pings the service and returns a hello message
-        :return: returns string 'pong'
+        Pings the service and returns 'pong' string
+        :return: string 'pong'.
         """
 
         response = self.client.get(self.PING)
@@ -48,14 +43,11 @@ class ApiClient:
 
         return response.text  # returns the string "pong"
 
-    ###  Lookup controller  ###
-
     def lookup(self, msisdn):
         """
-        GET /api/lookup
         Looks up address info on a mobile phone number.
-        :msisdn: Mobile phone number (required)
-        :return: LookupResult
+        :msisdn: Mobile phone number (required).
+        :return: LookupResult object.
         """
 
         if msisdn is None:
@@ -70,14 +62,11 @@ class ApiClient:
         lookup_result = LookupResult(**response.json())
         return lookup_result
 
-    ###  Keyword controller  ###
-
     def create_keyword(self, keyword):
         """
-        POST /api/keywords
         Creates a new keyword.
-        :keyword: Keyword
-        :return: string
+        :keyword: Keyword object.
+        :return: resulting keyword id string.
         """
         if keyword is None:
             raise ValueError("keyword")
@@ -88,9 +77,12 @@ class ApiClient:
 
     def get_all_keywords(self, short_number_id=None, keyword=None, mode=None, tag=None):
         """
-        GET /api/keywords
-        Gets all keywords.
-        :return: Keyword[]
+        Gets keywords.
+        :short_number_id: Short number id to search on.
+        :keyword: Keyword text to search for.
+        :mode: Keyword mode to search for.
+        :tag: Keyword tag to search for.
+        :return: array of Keyword objects.
         """
         params = {}
         if short_number_id is not None:
@@ -108,10 +100,9 @@ class ApiClient:
 
     def get_keyword(self, keyword_id):
         """
-        GET /api/keywords/{keywordId}
         Gets a keyword.
-        :keywordId: string
-        :return: Keyword
+        :keyword_id: keyword id string.
+        :return: Keyword object.
         """
         if keyword_id is None:
             raise ValueError("keywordId")
@@ -126,10 +117,8 @@ class ApiClient:
 
     def update_keyword(self, keyword):
         """
-        PUT /api/keywords/{keywordId}
-        Updates a keyword
-        :param keyword: Keyword
-        :return:
+        Updates a keyword.
+        :param keyword: Keyword object.
         """
         if keyword is None:
             raise ValueError("keyword")
@@ -143,37 +132,33 @@ class ApiClient:
 
     def delete_keyword(self, keyword_id):
         """
-        DELETE /api/keywords/{keywordId}
-        Deletes a keyword
-        :keywordId: string
+        Deletes a keyword.
+        :keyword_id: Keyword id string.
         """
         if keyword_id is None:
-            raise ValueError("keywordId")
+            raise ValueError("keyword_id")
 
         response = self.client.delete(self.KEYWORDS + "/" + keyword_id)
         response.raise_for_status()
 
-    ###  OutMessage controller  ###
-
     def prepare_msisdns(self, msisdns):
         """
-        POST /api/prepare-msisdns
-        MSISDNs to prepare as a string array
-        :message: string[]
+        Prepare MSISDNs for later sendings. This can greatly improve routing performance.
+        :msisdns: MSISDNs to prepare as a string array.
         """
         if msisdns is None:
             raise ValueError("msisdns")
+
         response = self.client.post(self.PREPARE_MSISDNS, msisdns)
         response.raise_for_status()
 
     def create_out_message(self, out_message):
         """
-        POST /api/out-messages
         Creates a new out-message
-        :message: OutMessage
+        :out_message: OutMessage object.
         """
         if out_message is None:
-            raise ValueError("message")
+            raise ValueError("out_message")
 
         response = self.client.post(self.OUT_MESSAGES, out_message)
         response.raise_for_status()
@@ -182,22 +167,20 @@ class ApiClient:
 
     def create_out_message_batch(self, out_messages):
         """
-        POST /api/out-messages/batch
         Creates a new out-message batch.
-        :messages: OutMessage[]
+        :out_messages: Array of OutMessage objects.
         """
         if out_messages is None:
-            raise ValueError("messages")
+            raise ValueError("out_messages")
 
         response = self.client.post(self.OUT_MESSAGES + "/batch", out_messages)
         response.raise_for_status()
 
     def get_out_message(self, transaction_id):
         """
-        GET /api/out-messages/batch/{transactionId}
-        Gets and out-message
-        :transactionId: string
-        :return: OutMessage
+        Gets an out-message by transaction id.
+        :transaction_id: Transaction id string.
+        :return: OutMessage object.
         """
         if transaction_id is None:
             raise ValueError("transactionId")
@@ -212,70 +195,60 @@ class ApiClient:
 
     def update_out_message(self, out_message):
         """
-        PUT /api/out-messages/batch/{transactionId}
         Updates a future scheduled out-message.
-        :message: OutMessage
+        :out_message: OutMessage
         """
         if out_message is None:
-            raise ValueError("message")
+            raise ValueError("out_message")
         if out_message.transactionId is None:
             raise ValueError("transactionId")
 
-        response = self.client.put(
-            self.OUT_MESSAGES + "/" + out_message.transactionId, out_message)
+        response = self.client.put(self.OUT_MESSAGES + "/" + out_message.transactionId, out_message)
         response.raise_for_status()
 
     def delete_out_message(self, transaction_id):
         """
-        DELETE /api/out-messages/batch/{transactionId}
         Deletes a future sheduled out-message.
-        :transactionId: string
+        :transaction_id: Out-message transaction id string.
         """
         if transaction_id is None:
-            raise ValueError("transactionId")
+            raise ValueError("transaction_id")
 
         response = self.client.delete(self.OUT_MESSAGES + "/" + transaction_id)
         response.raise_for_status()
 
     def get_out_message_export(self, from_date, to_date):
         """
-        GET /api/export/out-messages
         Gets out-message export in CSV format
         :from_date: From datetime in UTC
         :to_date: To datetime in UTC
-        :return: string containing CSV data
+        :return: string CSV data
         """
         payload = {"from": from_date, "to": to_date}
         response = self.client.get_with_params(self.OUT_MESSAGE_EXPORT, payload)
         response.raise_for_status()
         return response.text
 
-    ###  InMessages controller  ###
-
     def get_in_message(self, short_number_id, transaction_id):
         """
-        GET /api/in-messages/{shortNumberId}/{transactionId}
-        Gets and in-message
-        :shortNumberId: string
-        :transactionId: string
-        :return: InMessage
+        Gets an in-message.
+        :short_number_id: string
+        :transaction_id: string
+        :return: InMessage object.
         """
+        if short_number_id is None:
+            raise ValueError("short_number_id")
         if transaction_id is None:
-            raise ValueError("transactionId")
+            raise ValueError("transaction_id")
 
         response = self.client.get(self.IN_MESSAGES + "/" + short_number_id + "/" + transaction_id)
         response.raise_for_status()
-
         return InMessage(**response.json())
-
-
-    ###  Strex controller  ###
 
     def get_strex_merchants(self):
         """
-        GET /api/strex/merchants
         Gets all merchant ids.
-        :return: StrexMerchant[]
+        :return: Array of StrexMerchant objects.
         """
         response = self.client.get(self.STREX_MERCHANTS)
         response.raise_for_status()
@@ -283,13 +256,12 @@ class ApiClient:
 
     def get_strex_merchant(self, merchant_id):
         """
-        GET /api/strex/merchants/{merchantId}
-        Gets a merchant.
-        :merchantId: string
-        :returns: StrexMerchant
+        Gets a strex merchant.
+        :merchant_id: Merchant id string.
+        :returns: StrexMerchant object.
         """
         if merchant_id is None:
-            raise ValueError("merchantId")
+            raise ValueError("merchant_id")
 
         response = self.client.get(self.STREX_MERCHANTS + "/" + merchant_id)
 
@@ -297,166 +269,180 @@ class ApiClient:
             return None
 
         response.raise_for_status()
-
         return StrexMerchant(**response.json())
 
-    def save_strex_merchant(self, strex_merchant):
+    def save_strex_merchant(self, merchant):
         """
-        PUT /api/strex/merchants/{merchantId}
-        Creates/updates a merchant.
-        :merchant: StrexMerchant
+        Creates or updates a merchant.
+        :merchant: StrexMerchant object.
         """
-        if strex_merchant is None:
+        if merchant is None:
             raise ValueError("merchant")
-        if strex_merchant.merchantId is None:
+        if merchant.merchantId is None:
             raise ValueError("merchantId")
 
-        # expecting http 204 response (no content)
-        response = self.client.put(self.STREX_MERCHANTS + "/" + strex_merchant.merchantId, strex_merchant)
+        response = self.client.put(self.STREX_MERCHANTS + "/" + merchant.merchantId, merchant)
         response.raise_for_status()
 
     def delete_strex_merchant(self, merchant_id):
         """
         DELETE /api/strex/merchants/{merchantId}
         Deletes a merchant
-        :merchantId: string
+        :merchant_id: Merchant id string.
         """
         if merchant_id is None:
-            raise ValueError("merchantId")
+            raise ValueError("merchant_id")
 
         response = self.client.delete(self.STREX_MERCHANTS + "/" + merchant_id)
         response.raise_for_status()
 
     def create_one_time_password(self, one_time_password):
         """
-        POST /api/strex/one-time-passwords
-        :return:
+        Creates a new one-time password.
+        :one_time_password: OneTimePassword object.
         """
 
         if one_time_password is None:
-            raise ValueError("invalid one_time_password")
+            raise ValueError("one_time_password")
         if one_time_password.transactionId is None:
-            raise ValueError("invalid one_time_password.transactionId")
+            raise ValueError("transactionId")
         if one_time_password.merchantId is None:
-            raise ValueError("invalid one_time_password.merchantId")
+            raise ValueError("merchantId")
         if one_time_password.recipient is None:
-            raise ValueError("invalid one_time_password.recipient")
+            raise ValueError("recipient")
         if one_time_password.sender is None:
-            raise ValueError("invalid one_time_password.sender")
+            raise ValueError("sender")
         if one_time_password.recurring is None:
-            raise ValueError("invalid one_time_password.recurring")
+            raise ValueError("recurring")
 
         response = self.client.post(self.STREX_ONE_TIME_PASSWORDS, one_time_password)
         response.raise_for_status()
 
     def get_one_time_password(self, transaction_id):
         """
-        GET /api/strex/one-time-passwords/{transactionId}
-
-        :param transaction_id: string
-        :return: OneTimePassword
+        Gets a strex one-time password.
+        :transaction_id: Transaction id string.
+        :return: OneTimePassword object.
         """
+
+        if transaction_id is None:
+            raise ValueError("transaction_id")
 
         response = self.client.get(self.STREX_ONE_TIME_PASSWORDS + '/' + transaction_id)
         response.raise_for_status()
-
-
         return OneTimePassword(**response.json())
 
     def create_strex_transaction(self, transaction):
         """
-        POST /api/strex/transactions
-        :return str:
+        Creates a new strex transaction.
+        :transaction: StrexTransaction object.
+        :return: Transaction id string.
         """
+
+        if transaction is None:
+            raise ValueError("transaction")
 
         response = self.client.post(self.STREX_TRANSACTIONS, transaction)
         response.raise_for_status()
-
         return self._get_id_from_header(response.headers)
 
     def get_strex_transaction(self, transaction_id):
         """
-        GET /api/strex/transactions/{transactionId}
-        :return:
+        Gets a strex transaction.
+        :transaction_id: Transaction id string.
+        :return: StrexTransaction object.
         """
+
+        if transaction_id is None:
+            raise ValueError("transaction_id")
 
         response = self.client.get(self.STREX_TRANSACTIONS + '/' + transaction_id)
         response.raise_for_status()
-
         return StrexTransaction(**response.json())
 
-    def delete_strex_transaction(self, transaction_id):
+    def reverse_strex_transaction(self, transaction_id):
         """
-        DELETE /api/strex/transactions/{transactionId}
-        :param transaction_id:
-        :return:
+        Reverses a previous strex transaction.
+        :transaction_id: Transaction id string.
         """
+
+        if transaction_id is None:
+            raise ValueError("transaction_id")
+
         response = self.client.delete(self.STREX_TRANSACTIONS + '/' + transaction_id)
         response.raise_for_status()
 
     def send_strex_registration_sms(self, strex_registration_sms):
         """
-        POST /api/strex/registrationsms
         Initiates Strex-registation by SMS.
-        :strex_registration_sms: Strex registration SMS.
-        :return:
+        :strex_registration_sms: StrexRegistrationSms object.
         """
+
         if strex_registration_sms is None:
             raise ValueError("strex_registration_sms")
+
         response = self.client.post(self.STREX_REGISTRATION_SMS, strex_registration_sms)
         response.raise_for_status()
 
-
-    ### PublicKey controller  ###
-
     def get_server_public_key(self, key_name):
         """
-        GET /api/server/public-keys/{key_name}
-        :param key_name:
-        :return:
+        Gets a server public key.
+        :key_name: public key name string.
+        :return: PublicKey object.
         """
+
+        if key_name is None:
+            raise ValueError("key_name")
+
         response = self.client.get(self.SERVER_PUBLIC_KEYS + '/' + key_name)
         response.raise_for_status()
-
         return PublicKey(**response.json())
 
     def get_client_public_keys(self):
         """
-        GET /api/client/public-keys
-        :return: List
+        Gets all client public key.
+        :return: Array of PublicKey objects.
         """
         response = self.client.get(self.CLIENT_PUBLIC_KEYS)
         response.raise_for_status()
-
         return PublicKey.from_list(response.json())
 
     def get_client_public_key(self, key_name):
         """
-        GET /api/client/public-keys/{key_name}
-        :return: Dict
+        Gets a client public key.
+        :key_name: public key name string.
+        :return: PublicKey object.
         """
+
+        if key_name is None:
+            raise ValueError("key_name")
+
         response = self.client.get(self.CLIENT_PUBLIC_KEYS + '/' + key_name)
         response.raise_for_status()
-
         return PublicKey(**response.json())
 
     def delete_client_public_key(self, key_name):
         """
-        DELETE /api/client/public-keys/{key_name}
+        Deletes a client public key.
+        :key_name: public key name string.
         :return:
         """
+
+        if key_name is None:
+            raise ValueError("key_name")
+
         response = self.client.delete(self.CLIENT_PUBLIC_KEYS + '/' + key_name)
         response.raise_for_status()
 
     def get_oneclick_config(self, config_id):
         """
-        GET /api/oneclick/configs/{configId}
         Gets a one-click config.
-        :configId: string
-        :returns: OneClickConfig
+        :config_id: One-click config id string.
+        :returns: OneClickConfig object.
         """
+
         if config_id is None:
-            raise ValueError("configId")
+            raise ValueError("config_id")
 
         response = self.client.get(self.ONECLICK_CONFIGS + "/" + config_id)
 
@@ -464,21 +450,19 @@ class ApiClient:
             return None
 
         response.raise_for_status()
-
         return OneClickConfig(**response.json())
 
     def save_oneclick_config(self, config):
         """
-        PUT /api/one-click/configs/{configId}
-        Creates/updates a one-click config.
-        :config: OneClickConfig
+        Creates or updates a one-click config.
+        :config: OneClickConfig object.
         """
+
         if config is None:
             raise ValueError("config")
         if config.configId is None:
             raise ValueError("configId")
 
-        # expecting http 204 response (no content)
         response = self.client.put(self.ONECLICK_CONFIGS + "/" + config.configId, config)
         response.raise_for_status()
 
@@ -490,4 +474,3 @@ class ApiClient:
         """
         chunks = headers["Location"].split("/")
         return chunks[-1]
-

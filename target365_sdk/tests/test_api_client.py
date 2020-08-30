@@ -13,6 +13,7 @@ from ..models.strex_transaction import StrexTransaction
 from ..models.status_codes import StatusCodes
 from ..models.detailed_status_codes import DetailedStatusCodes
 from ..models.oneclick_config import OneClickConfig
+from ..models.strex_registration_sms import StrexRegistrationSms
 
 
 @pytest.fixture
@@ -279,7 +280,6 @@ def test_create_oneclick_config(client):
     }
 
     config = OneClickConfig(**config_data)
-
     client.save_oneclick_config(config)
 
 
@@ -294,6 +294,18 @@ def test_get_one_time_password(client, transaction_id):
 
     assert one_time_password.transactionId == transaction_id
 
+
+def test_send_strex_registration_sms(client, random_transaction_id):
+    data = {
+				"transactionId": random_transaction_id,
+        "recipient": "+4798079008",
+				"merchantId": "mer_test",
+        "smsText": "Please register as a Strex-custom to continue.",
+    }
+
+    strex_registration_sms = StrexRegistrationSms(**data)
+    client.send_strex_registration_sms(strex_registration_sms)
+    
 
 # Formats datetime object into utc string
 # got from https://stackoverflow.com/q/19654578/1241791

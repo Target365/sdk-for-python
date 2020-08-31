@@ -13,6 +13,7 @@ from ..models.strex_transaction import StrexTransaction
 from ..models.status_codes import StatusCodes
 from ..models.detailed_status_codes import DetailedStatusCodes
 from ..models.oneclick_config import OneClickConfig
+from ..models.strex_registration_sms import StrexRegistrationSms
 from ..models.user_validity import UserValidity
 
 
@@ -171,6 +172,12 @@ def test_out_message_sequence(client, valid_short_number_id):
     client.delete_out_message(str(t3))
 
 
+def test_out_message_export(client):
+    from_date = "2020-08-22T00:00:00Z"
+    to_date = "2020-08-23T00:00:00Z"
+    csv = client.get_out_message_export(from_date, to_date)
+    assert csv.startswith("SendTime,Sender,Recipient,MessageParts,StatusCode,DetailedStatusCode,Operator,Tags") is True
+
 def test_prepare_msisdns(client):
     client.prepare_msisdns(["+4798079008"])
 
@@ -230,8 +237,8 @@ def test_strex_transaction_sequence(client, random_transaction_id):
 
     assert strex_transaction.detailedStatusCode == DetailedStatusCodes.DELIVERED
 
-    # delete_strex_transaction will wait up to 20 secs if trans isn't finished
-    client.delete_strex_transaction(random_transaction_id)
+    # reverse_strex_transaction will wait up to 20 secs if trans isn't finished
+    client.reverse_strex_transaction(random_transaction_id)
 
     # reversal transaction id is always original id prefixed by '-'
     reversal_transaction = client.get_strex_transaction("-" + random_transaction_id)
@@ -277,7 +284,6 @@ def test_create_oneclick_config(client):
     }
 
     config = OneClickConfig(**config_data)
-
     client.save_oneclick_config(config)
 
 
@@ -292,6 +298,18 @@ def test_get_one_time_password(client, transaction_id):
 
     assert one_time_password.transactionId == transaction_id
 
+
+def test_send_strex_registration_sms(client, random_transaction_id):
+    data = {
+				"transactionId": random_transaction_id,
+        "recipient": "+4798079008",
+				"merchantId": "mer_test",
+        "smsText": "Please register as a Strex-custom to continue.",
+    }
+
+    strex_registration_sms = StrexRegistrationSms(**data)
+    client.send_strex_registration_sms(strex_registration_sms)
+    
 
 # Formats datetime object into utc string
 # got from https://stackoverflow.com/q/19654578/1241791

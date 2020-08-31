@@ -13,6 +13,7 @@ from ..models.strex_transaction import StrexTransaction
 from ..models.status_codes import StatusCodes
 from ..models.detailed_status_codes import DetailedStatusCodes
 from ..models.oneclick_config import OneClickConfig
+from ..models.user_validity import UserValidity
 
 
 @pytest.fixture
@@ -237,6 +238,9 @@ def test_strex_transaction_sequence(client, random_transaction_id):
     
     assert reversal_transaction.statusCode == StatusCodes.REVERSED
 
+def test_user_validity(client):
+    validity = client.get_strex_user_info("mer_test", "+4799031520")
+    assert validity == UserValidity.Full
 
 def test_get_server_public_key(client):
     public_key = client.get_server_public_key('2017-11-17')

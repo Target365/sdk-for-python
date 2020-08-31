@@ -8,7 +8,7 @@ from .models.one_time_password import OneTimePassword
 from .models.strex_transaction import StrexTransaction
 from .models.public_key import PublicKey
 from .models.oneclick_config import OneClickConfig
-
+from .models.user_validity import UserValidity
 
 name = "target365_sdk"
 
@@ -23,6 +23,7 @@ class ApiClient:
     STREX_MERCHANTS = "api/strex/merchants"
     STREX_TRANSACTIONS = "api/strex/transactions"
     STREX_ONE_TIME_PASSWORDS = "api/strex/one-time-passwords"
+    STREX_USER_INFO = "api/strex/validity"
     SERVER_PUBLIC_KEYS = "api/server/public-keys"
     CLIENT_PUBLIC_KEYS = "api/client/public-keys"
     ONECLICK_CONFIGS = "api/one-click/configs"
@@ -379,6 +380,16 @@ class ApiClient:
         response = self.client.delete(self.STREX_TRANSACTIONS + '/' + transaction_id)
         response.raise_for_status()
 
+    def get_strex_user_info(self, merchant_id, recipient):
+        """
+        GET /api/strex/validity
+        :return:
+        """
+
+        response = self.client.get(self.STREX_USER_INFO + "?merchantId=" + merchant_id + "&recipient=" + recipient)
+        response.raise_for_status()
+
+        return response.json();
 
     ### PublicKey controller  ###
 

@@ -393,15 +393,17 @@ class ApiClient:
         Gets Strex user validity.
         :merchant_id: Merchant id string.
         :recipient: MSISDN recipient string.
-        :returns: StrexMerchant object.
+        :returns: UserValidity string.
         """
 
-        if merchant_id is None:
-            raise ValueError("merchant_id")
         if recipient is None:
             raise ValueError("recipient")
 
-        query = {"merchantId": merchant_id, "recipient": recipient}
+        query = {"recipient": recipient}
+
+        if merchant_id is not None:
+            query["merchantId"] = merchant_id
+
         response = self.client.get_with_params(self.STREX_USER_INFO, query)
         response.raise_for_status()
         return response.json();

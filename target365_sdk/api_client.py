@@ -54,8 +54,10 @@ class ApiClient:
 
         if msisdn is None:
             raise ValueError("msisdn")
-        payload = {"msisdn": msisdn}
-        response = self.client.get_with_params(self.LOOKUP, payload)
+
+        query = {"msisdn": msisdn}
+        response = self.client.get_with_params(self.LOOKUP, query)
+
         if response.status_code == self.NOT_FOUND:
             return None
 
@@ -86,17 +88,17 @@ class ApiClient:
         :tag: Keyword tag to search for.
         :return: array of Keyword objects.
         """
-        params = {}
+        query = {}
         if short_number_id is not None:
-            params["shortNumberId"] = short_number_id
+            query["shortNumberId"] = short_number_id
         if keyword is not None:
-            params["keywordText"] = keyword
+            query["keywordText"] = keyword
         if mode is not None:
-            params["mode"] = mode
+            query["mode"] = mode
         if tag is not None:
-            params["tag"] = tag
+            query["tag"] = tag
 
-        response = self.client.get_with_params(self.KEYWORDS, params)
+        response = self.client.get_with_params(self.KEYWORDS, query)
         response.raise_for_status()
         return Keyword.from_list(response.json())
 
@@ -226,8 +228,8 @@ class ApiClient:
         :to_date: To datetime in UTC
         :return: string CSV data
         """
-        payload = {"from": from_date, "to": to_date}
-        response = self.client.get_with_params(self.OUT_MESSAGE_EXPORT, payload)
+        query = {"from": from_date, "to": to_date}
+        response = self.client.get_with_params(self.OUT_MESSAGE_EXPORT, query)
         response.raise_for_status()
         return response.text
 
@@ -388,13 +390,20 @@ class ApiClient:
 
     def get_strex_user_info(self, merchant_id, recipient):
         """
-        GET /api/strex/validity
-        :return:
+        Gets Strex user validity.
+        :merchant_id: Merchant id string.
+        :recipient: MSISDN recipient string.
+        :returns: StrexMerchant object.
         """
 
-        response = self.client.get(self.STREX_USER_INFO + "?merchantId=" + merchant_id + "&recipient=" + recipient)
-        response.raise_for_status()
+        if merchant_id is None:
+            raise ValueError("merchant_id")
+        if recipient is None:
+            raise ValueError("recipient")
 
+        query = {"merchantId": merchant_id, "recipient": recipient}
+        response = self.client.get_with_params(self.STREX_USER_INFO, query)
+        response.raise_for_status()
         return response.json();
 
     def get_server_public_key(self, key_name):

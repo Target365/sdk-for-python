@@ -177,12 +177,26 @@ config.invoiceText = "Donation test"
 config.onlineText = "Buy directly"
 config.offlineText = "Buy with PIN-code"
 config.redirectUrl = "https://your-return-url.com?id={TransactionId}" # Placeholder {TransactionId} is replaced by actual id
+config.subscriptionPrice = 99
+config.subscriptionInterval = "monthly"
+config.subscriptionStartSms = "Thanks for donating 99kr each month."
 config.recurring = False
 config.isRestricted = False
 config.age = 0
 
 target365_client.save_oneclick_config(config)
 ```
+
+If Recurring is set to 'false', the following parameters are optional:
+
+* SubscriptionInterval - Possible values are "weekly", "monthly", "yearly"
+
+* SubscriptionPrice - How much the subscriber will be charged each interval
+
+This parameter is optional:
+
+* SubscriptionStartSms - SMS that will be sent to the user when subscription starts.
+
 
 ### One-time transaction
 This example sets up a simple one-time transaction for one-click. After creation you can redirect the end-user to the one-click landing page by redirecting to http://betal.strex.no/{YOUR-ACCOUNT-ID}/{YOUR-TRANSACTION-ID} for PROD and http://test-strex.target365.io/{YOUR-ACCOUNT-ID}/{YOUR-TRANSACTION-ID} for TEST-environment.

@@ -36,8 +36,6 @@ The SDK also implements very high security (ECDsaP256 HMAC).
 ## Setup
 ### ApiClient
 ```Python
-import pytest
-import os
 import uuid
 import target365_sdk
 

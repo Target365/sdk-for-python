@@ -33,11 +33,13 @@ The Target365 SDK gives you direct access to our online services like sending an
 The SDK provides an appropriate abstraction level for Python and is officially support by Target365.
 The SDK also implements very high security (ECDsaP256 HMAC).
 
+Information on how to get the key name and private key is documented in [the README file](README.md).
+
 ## Setup
 ### ApiClient
 ```Python
 import uuid
-import target365_sdk
+from target365_sdk import ApiClient
 
 base_url = "https://shared.target365.io"
 key_name = "YOUR_KEY"

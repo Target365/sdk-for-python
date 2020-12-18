@@ -53,6 +53,10 @@ Use the HEX string here displayed and just remove the colon characters in betwee
 
 For more details on using the SDK we strongly suggest you check out our [Python User Guide](USERGUIDE.md).
 
+#### Key Name
+
+The key name needed to initialize an ApiClient is the one associated with your key, upon registration, e.g. "AcmeInc".
+
 ### PIP
 ```
 pip install target365-sdk

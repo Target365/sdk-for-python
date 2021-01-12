@@ -26,6 +26,8 @@
     * [SMS forward](#sms-forward)
     * [DLR forward](#dlr-forward)
     * [DLR status codes](#dlr-status-codes)
+* [Troubleshooting](#troubleshooting)
+    * [Nodename error](#nodename-error)
 
 ## Introduction
 The Target365 SDK gives you direct access to our online services like sending and receiving SMS, address lookup and Strex payment transactions.
@@ -39,6 +41,7 @@ Information on how to get the key name and private key is documented in [the REA
 ```Python
 import uuid
 from target365_sdk import ApiClient
+from target365_sdk.api_client import OutMessage
 
 base_url = "https://shared.target365.io"
 key_name = "YOUR_KEY"
@@ -345,3 +348,22 @@ Delivery reports contains two status codes, one overall called `StatusCode` and 
 |OneTimePasswordFailed|One-time password failed|
 |SubscriberTooYoung|Subscriber too young|
 |TimeoutError|Timeout error|
+
+
+## Troubleshooting
+
+### Nodename error
+
+If you get a nodename error like this:
+
+``````python
+HTTPSConnectionPool(host='shared.target365.ioapi', port=443): Max retries exceeded with url: /out-messages (Caused by NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x10dc9f940>: Failed to establish a new connection: [Errno 8] nodename nor servname provided, or not known',))
+``````
+
+...then ensure your base url ends with slash:
+
+``````python
+# RIGHT:
+base_url = "https://shared.target365.io/"
+# WRONG: base_url = "https://shared.target365.io"
+``````

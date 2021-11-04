@@ -5,6 +5,7 @@ class DeliveryReport(Model):
     def _accepted_params(self):
         return [
             'correlationId',
+            'sessionId',
             'transactionId',
             'price',
             'sender',

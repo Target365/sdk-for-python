@@ -21,6 +21,7 @@ class OutMessage(Model):
     def _accepted_params(self):
         return [
             'transactionId',
+            'sessionId',
             'correlationId',
             'keywordId',
             'sender',
@@ -37,6 +38,7 @@ class OutMessage(Model):
             'smscTransactionId',
             'detailedStatusCode',
             'delivered',
+            'operatorId',
             'smscMessageParts',
             'tags',
             'properties',

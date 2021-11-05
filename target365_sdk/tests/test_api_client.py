@@ -250,7 +250,7 @@ def test_user_validity(client):
     assert validity == UserValidity.Full
 
 def test_get_server_public_key(client):
-    public_key = client.get_server_public_key('2017-11-17')
+    public_key = client.get_server_public_key('2021-07-27')
 
     assert public_key.accountId == 8
 

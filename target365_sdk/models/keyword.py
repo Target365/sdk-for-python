@@ -14,4 +14,5 @@ class Keyword(Model):
             'lastModified',
             'tags',
             'customProperties',
+            'aliases',
         ]

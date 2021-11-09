@@ -20,6 +20,7 @@ class StrexTransaction(Model):
             'merchantId',
             'serviceCode',
             'businessModel',
+            'preAuthServiceId',
             'age',
             'isRestricted',
             'smsConfirmation',

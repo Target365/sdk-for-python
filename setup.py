@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="target365_sdk",
-    version="1.7.0",
+    version="1.7.1",
     author="Target365",
     author_email="support@target365.no",
     description="Target365 SDK",
@@ -26,6 +26,8 @@ setuptools.setup(
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
+        'Programming Language :: Python :: 3.9',
+        'Programming Language :: Python :: 3.10',
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],

@@ -10,6 +10,7 @@ class OneClickConfig(Model):
             'serviceCode',
             'businessModel',
             'preAuthServiceId',
+            'preAuthServiceDescription',
             'recurring',
             'redirectUrl',
             'onlineText',

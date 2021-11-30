@@ -9,6 +9,7 @@ class OutMessageStrex(Model):
             'serviceCode',
             'businessModel',
             'preAuthServiceId',
+            'preAuthServiceDescription',
             'age',
             'isRestricted',
             'smsConfirmation',

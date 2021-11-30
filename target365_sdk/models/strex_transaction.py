@@ -21,6 +21,7 @@ class StrexTransaction(Model):
             'serviceCode',
             'businessModel',
             'preAuthServiceId',
+            'preAuthServiceDescription',
             'age',
             'isRestricted',
             'smsConfirmation',

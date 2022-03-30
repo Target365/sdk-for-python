@@ -6,6 +6,7 @@
     * [ApiClient](#apiclient)
 * [Text messages](#text-messages)
     * [Send an SMS](#send-an-sms)
+    * [Set DeliveryReport URL for an SMS](#set-deliveryreport-url-for-an-sms)
     * [Schedule an SMS for later sending](#schedule-an-sms-for-later-sending)
     * [Edit a scheduled SMS](#edit-a-scheduled-sms)
     * [Delete a scheduled SMS](#delete-a-scheduled-sms)
@@ -57,6 +58,18 @@ out_message.sender = "Target365"
 out_message.recipient = "+4798079008"
 out_message.content = "Hello World from SMS!"
 
+target365_client.create_out_message(out_message)
+```
+
+### Set DeliveryReport URL for an SMS
+This example sends an SMS and later a [DeliveryReport](#dlr-forward) will be posted at the url specified below.
+```Python
+out_message = OutMessage()
+out_message.transactionId = str(uuid.uuid4())
+out_message.sender = "Target365"
+out_message.recipient = "+4798079008"
+out_message.content = "Hello World from SMS!"
+out_message.deliveryReportUrl = "https://your.site.com/sms/dlr"
 target365_client.create_out_message(out_message)
 ```
 

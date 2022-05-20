@@ -17,4 +17,5 @@ class DeliveryReport(Model):
             'billed',
             'smscTransactionId',
             'smscMessageParts',
+            'properties',
         ]

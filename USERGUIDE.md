@@ -10,6 +10,7 @@
     * [Schedule an SMS for later sending](#schedule-an-sms-for-later-sending)
     * [Edit a scheduled SMS](#edit-a-scheduled-sms)
     * [Delete a scheduled SMS](#delete-a-scheduled-sms)
+    * [Send batch](#send-batch)
 * [Payment transactions](#payment-transactions)
     * [Create a Strex payment transaction](#create-a-strex-payment-transaction)
     * [Create a Strex payment transaction with one-time password](#create-a-strex-payment-transaction-with-one-time-password)
@@ -101,6 +102,30 @@ target365_client.update_out_message(out_message)
 This example deletes a previously created scheduled SMS.
 ```Python
 target365_client.delete_out_message(transaction_id)
+```
+
+### Send batch
+This example sends a batch of messages in one operation.
+Batches behave logically the same way as if you would send each message by itself and is offered only for performance reasons. Here are the limitations and restrictions when it comes to using batches:
+* You can have up to 10 000 messages per batch operation.
+* Each message in the batch must have a unique TransactionId, otherwise the operation will fail.
+* If one or more messages have errors (like invalid recipient etc.) only those messages will fail, the rest will be processed normally.
+* If you want a status per message you have to set the DeliveryReportUrl on each message.
+```Python
+out_message1 = OutMessage()
+out_message1.transactionId = str(uuid.uuid4())
+out_message1.sender = "Target365"
+out_message1.recipient = "+4798079008"
+out_message1.content = "Hello!"
+
+out_message2 = OutMessage()
+out_message2.transactionId = str(uuid.uuid4())
+out_message2.sender = "Target365"
+out_message2.recipient = "+4798079008"
+out_message2.content = "Hello again!"
+
+messages = [out_message1, out_message2]
+target365_client.create_out_message_batch(messages)
 ```
 
 ## Payment transactions

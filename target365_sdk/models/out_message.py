@@ -37,6 +37,7 @@ class OutMessage(Model):
             'statusCode',
             'smscTransactionId',
             'detailedStatusCode',
+            'statusDescription',
             'delivered',
             'operatorId',
             'smscMessageParts',

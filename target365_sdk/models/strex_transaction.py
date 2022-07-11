@@ -14,6 +14,7 @@ class StrexTransaction(Model):
             'deliveryMode',
             'statusCode',
             'detailedStatusCode',
+            'statusDescription',
             'smscTransactionId',
             'created',
             'lastModified',

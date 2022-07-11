@@ -9,6 +9,7 @@ class Keyword(Model):
             'keywordText',
             'mode',
             'forwardUrl',
+            'preAuthSettings', # KeywordPreAuthSettings class
             'enabled',
             'created',
             'lastModified',

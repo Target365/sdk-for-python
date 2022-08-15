@@ -7,6 +7,7 @@
 * [Text messages](#text-messages)
     * [Send an SMS](#send-an-sms)
     * [Set DeliveryReport URL for an SMS](#set-deliveryreport-url-for-an-sms)
+    * [Add tags to message](#add-tags-to-message)
     * [Schedule an SMS for later sending](#schedule-an-sms-for-later-sending)
     * [Edit a scheduled SMS](#edit-a-scheduled-sms)
     * [Delete a scheduled SMS](#delete-a-scheduled-sms)
@@ -71,6 +72,18 @@ out_message.sender = "Target365"
 out_message.recipient = "+4798079008"
 out_message.content = "Hello World from SMS!"
 out_message.deliveryReportUrl = "https://your.site.com/sms/dlr"
+target365_client.create_out_message(out_message)
+```
+
+### Add tags to message
+This example show how to add tags to a message that can be used for statistics and grouping. Hierachies can be created with /. In the future, tags may only contain a-z0-9. Urls are allowed as an exception, so that '//' doesn't make hierarchy.
+```Python
+out_message = OutMessage()
+out_message.transactionId = str(uuid.uuid4())
+out_message.sender = "Target365"
+out_message.recipient = "+4798079008"
+out_message.content = "Hello World from SMS!"
+out_message.tags = { "tag1", "group/subgroup/tag2" }
 target365_client.create_out_message(out_message)
 ```
 

@@ -7,7 +7,6 @@ from ..api_client import ApiClient
 from ..models.keyword import Keyword
 from ..models.out_message import OutMessage
 from ..models.out_message_strex import OutMessageStrex
-from ..models.strex_merchant import StrexMerchant
 from ..models.one_time_password import OneTimePassword
 from ..models.strex_transaction import StrexTransaction
 from ..models.status_codes import StatusCodes
@@ -15,6 +14,7 @@ from ..models.detailed_status_codes import DetailedStatusCodes
 from ..models.oneclick_config import OneClickConfig
 from ..models.strex_registration_sms import StrexRegistrationSms
 from ..models.user_validity import UserValidity
+from ..models.pincode import Pincode
 
 
 @pytest.fixture
@@ -268,22 +268,22 @@ def test_get_client_public_keys(client, api_key_name):
 
 def test_create_oneclick_config(client):
     config_data = {
-				"configId": "APITEST",
-				"shortNumber": "0000",
-				"price": 99,
-				"merchantId": "mer_test",
-				"businessModel": "STREX-PAYMENT",
-				"serviceCode": "14002",
-				"invoiceText": "Donation test",
-				"onlineText": "Buy directly",
-				"offlineText": "Buy with PIN-code",
-				"redirectUrl": "https://tempuri.org/php",
+		"configId": "APITEST",
+		"shortNumber": "0000",
+		"price": 99,
+		"merchantId": "mer_test",
+		"businessModel": "STREX-PAYMENT",
+		"serviceCode": "14002",
+		"invoiceText": "Donation test",
+		"onlineText": "Buy directly",
+		"offlineText": "Buy with PIN-code",
+		"redirectUrl": "https://tempuri.org/php",
         "subscriptionPrice": 99,
         "subscriptionInterval": "monthly",
         "subscriptionStartSms": "Thanks for donating 99kr each month.",
-				"recurring": False,
-				"isRestricted": False,
-				"age": 0,
+		"recurring": False,
+		"isRestricted": False,
+		"age": 0,
     }
 
     config = OneClickConfig(**config_data)
@@ -304,15 +304,31 @@ def test_get_one_time_password(client, transaction_id):
 
 def test_send_strex_registration_sms(client, random_transaction_id):
     data = {
-				"transactionId": random_transaction_id,
+		"transactionId": random_transaction_id,
         "recipient": "+4798079008",
-				"merchantId": "mer_test",
+		"merchantId": "mer_test",
         "smsText": "Please register as a Strex-custom to continue.",
     }
 
     strex_registration_sms = StrexRegistrationSms(**data)
     client.send_strex_registration_sms(strex_registration_sms)
+
+def test_send_pincode(client, random_transaction_id):
+    data = {
+		"transactionId": random_transaction_id,
+        "recipient": "+4798079008",
+		"merchantId": "mer_test",
+        "smsText": "Please register as a Strex-custom to continue.",
+        "prefixText": "Your code: ",
+        "suffixText": ". Don't share this code with anyone."
+    }
+
+    pincode = Pincode(**data)
+    client.send_pincode(pincode)
+
+    result = client.verify_pincode(random_transaction_id, "1234")
     
+    assert result == False
 
 # Formats datetime object into utc string
 # got from https://stackoverflow.com/q/19654578/1241791

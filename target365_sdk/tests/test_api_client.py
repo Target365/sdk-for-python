@@ -213,6 +213,7 @@ def test_get_one_time_password(client, transaction_id):
 
 def test_strex_transaction_sequence(client, random_transaction_id):
     strex_transaction_data = {
+        "transactionId": random_transaction_id,
         "invoiceText": "Thank you for your donation",
         "merchantId": "mer_test",
         "price": 10,
@@ -220,7 +221,6 @@ def test_strex_transaction_sequence(client, random_transaction_id):
         "recipient": "+4798079008",
         "serviceCode": "14002",
         "shortNumber": "0000",
-        "transactionId": random_transaction_id,
         "oneTimePassword": "1234"
     }
 
@@ -302,9 +302,10 @@ def test_get_one_time_password(client, transaction_id):
     assert one_time_password.transactionId == transaction_id
 
 
-def test_send_strex_registration_sms(client, random_transaction_id):
+def test_send_strex_registration_sms(client):
+    transactionId = str(uuid.uuid4())
     data = {
-		"transactionId": random_transaction_id,
+		"transactionId": transactionId,
         "recipient": "+4798079008",
 		"merchantId": "mer_test",
         "smsText": "Please register as a Strex-custom to continue.",
@@ -313,20 +314,21 @@ def test_send_strex_registration_sms(client, random_transaction_id):
     strex_registration_sms = StrexRegistrationSms(**data)
     client.send_strex_registration_sms(strex_registration_sms)
 
-def test_send_pincode(client, random_transaction_id):
+def test_send_pincode(client):
+    transactionId = str(uuid.uuid4())
     data = {
-		"transactionId": random_transaction_id,
+        "transactionId": transactionId,
+        "sender": "Target365",
         "recipient": "+4798079008",
-		"merchantId": "mer_test",
-        "smsText": "Please register as a Strex-custom to continue.",
         "prefixText": "Your code: ",
-        "suffixText": ". Don't share this code with anyone."
+        "suffixText": ". Don't share this code with anyone.",
+        "pincodeLength": 4
     }
 
     pincode = Pincode(**data)
     client.send_pincode(pincode)
 
-    result = client.verify_pincode(random_transaction_id, "1234")
+    result = client.verify_pincode(transactionId, "1234")
     
     assert result == False
 

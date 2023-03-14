@@ -28,6 +28,8 @@ class ApiClient:
     SERVER_PUBLIC_KEYS = "api/server/public-keys"
     CLIENT_PUBLIC_KEYS = "api/client/public-keys"
     ONECLICK_CONFIGS = "api/one-click/configs"
+    PINCODE = "api/pincodes"
+    PINCODE_VERIFICATION = "api/pincodes/verification"
 
     NOT_FOUND = 404
 
@@ -489,6 +491,32 @@ class ApiClient:
 
         response = self.client.put(self.ONECLICK_CONFIGS + "/" + config.configId, config)
         response.raise_for_status()
+
+    def send_pincode(self, pincode):
+        """
+        Sends pin code to user for verification.
+        :pincode: Pincode object.
+        """
+
+        if pincode is None:
+            raise ValueError("pincode")
+
+        response = self.client.post(self.PINCODE, pincode)
+        response.raise_for_status()
+
+    def verify_pincode(self, transactionId, pincode):
+        """
+        Verify pin code sent to user.
+        :transactionId: transaction id string.
+        :pincode: pincode string.
+        """
+
+        if pincode is None:
+            raise ValueError("pincode")
+
+        response = self.client.get(self.PINCODE_VERIFICATION + "?transactionId=" + transactionId + "&pincode=" + pincode)
+        response.raise_for_status()
+        return response.text == "true"
 
     # noinspection PyMethodMayBeStatic,PyMethodMayBeStatic
     def _get_id_from_header(self, headers):

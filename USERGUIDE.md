@@ -31,6 +31,10 @@
     * [DLR status codes](#dlr-status-codes)
 * [Encoding and SMS length](#encoding-and-sms-length)
     * [Automatic character replacements](#automatic-character-replacements)
+* [Pre-authorization](#pre-authorization)
+   * [Pre-authorization via keyword](#pre-authorization-via-keyword)
+   * [Pre-authorization via API](#pre-authorization-via-api)
+   * [Rebilling with pre-authorization](#rebilling-with-pre-authorization)
 * [Testing](#testing)
     * [Fake numbers](#fake-numbers)
 

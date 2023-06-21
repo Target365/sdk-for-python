@@ -313,7 +313,7 @@ target365_client.delete_keyword(keyword_id)
 ### SMS forward
 This example shows how SMS messages are forwarded to the keywords ForwardUrl. All sms forwards expects a response with status code 200 (OK). If the request times out or response status code differs the forward will be retried several times.
 #### Request
-```
+```http
 POST https://your-site.net/api/receive-sms HTTP/1.1
 Content-Type: application/json
 Host: your-site.net
@@ -328,7 +328,7 @@ Host: your-site.net
 ```
 
 #### Response
-```
+```http
 HTTP/1.1 200 OK
 Date: Thu, 07 Feb 2019 21:13:51 GMT
 Content-Length: 0
@@ -337,7 +337,7 @@ Content-Length: 0
 ### DLR forward
 This example shows how delivery reports (DLR) are forwarded to the outmessage DeliveryReportUrl. All DLR forwards expect a response with status code 200 (OK). If the request times out or response status code differs the forward will be retried 10 times with exponentially longer intervals for about 15 hours.
 #### Request
-```
+```http
 POST https://your-site.net/api/receive-dlr HTTP/1.1
 Content-Type: application/json
 Host: your-site.net
@@ -359,7 +359,7 @@ Host: your-site.net
 ```
 
 #### Response
-```
+```http
 HTTP/1.1 200 OK
 Date: Thu, 07 Feb 2019 21:13:51 GMT
 Content-Length: 0
@@ -453,6 +453,123 @@ Unless you spesifically set the AllowUnicode property to true, we will automatic
 |\uFEFF|(regular space)|
 
 *Please note that we might remove or add Unicode characters that are automatically replaced. This is an "best effort" to save on SMS costs!*
+
+## Pre-authorization
+Some Strex service codes require recurring billing to be authorized by the user via a confirmation sms or sms pincode.
+This can be achieved either via direct API calls or setting it up to be handled automatically via a keyword.
+
+### Pre-authorization via keyword
+Automatic pre-authorization can be activated on a keyword by either activating it in the
+PreAuth section of the keyword in Strex Connect or via the SDK.
+
+```Python
+preauth = KeywordPreAuthSettings()
+preauth.active = true
+preauth.infoText = "Info message sent before preauth message"
+preauth.infoSender = "2002"
+preauth.prefixMessage = "Text inserted before preauth text"
+preauth.postfixMessage = "Text inserted after preauth text"
+preauth.delay = delayMins
+preauth.merchantId = "Your merchant id"
+preauth.serviceDescription = "Service description"
+
+keyword = Keyword()
+keyword.shortNumberId = "NO-2002"
+keyword.keywordText = "HELLO"
+keyword.mode = "Text"
+keyword.forwardUrl = "https://your-site.net/api/receive-sms"
+keyword.enabled = True
+keyword.preAuthSettings = preauth
+
+keyword_id = target365_client.create_keyword(keyword)
+```
+
+In-messages forwarded to you will then look like this:
+```http
+POST https://your-site.net/api/receive-sms HTTP/1.1
+Content-Type: application/json
+
+{
+  "transactionId":"00568c6b-7baf-4869-b083-d22afc163059",
+  "created": "2021-12-06T09:50:00+00:00",
+  "keywordId": "12345678",
+  "sender":"+4798079008",
+  "recipient":"2002",
+  "content": "HELLO",
+  "properties": {
+    "ServiceId": "1234",
+    "preAuthorization": true
+  }
+}
+```
+If PreAuthorization was not successfully performed, "preAuthorization" will be "false".
+
+The new properties are ServiceId and preAuthorization. ServiceId must be added to the outmessage/transaction when doing rebilling in the "preAuthServiceId" field. 
+The ServiceId is always the same for one keyword. Incoming messages forwarded with "preAuthorization" set as "false" are not possible
+to bill via Strex Payment.
+
+### Pre-authorization via API
+Pre-authorization via API can be used with either SMS confirmation or OTP (one-time-passord). SMS confirmation is used by default if OneTimePassword isn't used.
+PreAuthServiceId is an id chosen by you and must be used for all subsequent rebilling. PreAuthServiceDescription is optional, but should be set as this text will be visible for the end user on the Strex "My Page" web page.
+
+Example using OTP-flow:
+```Python
+transactionId = "your-unique-id"
+
+one_time_password_data = {
+    'transactionId': transactionId,
+    'merchantId': 'your-merchant-id',
+    'recipient': '+4798079008',
+    'sender': 'Test',
+    'messagePrefix': 'Dear customer...',
+    'messageSuffix': 'Best Regards...',
+    'recurring': True
+}
+
+one_time_password = OneTimePassword(**one_time_password_data)
+
+target365_client.create_one_time_password(one_time_password)
+
+# Get input from end user (eg. via web site) ***
+
+strex_transaction_data = {
+    'TransactionId': transactionId,
+    'ShortNumber': '2002',
+    'Recipient': '+4798079008',
+    'MerchantId': 'your-merchant-id',
+    'Age': 18,
+    'Price': 10,
+    'ServiceCode': '14002',
+    'PreAuthServiceId': 'your-service-id',
+    'PreAuthServiceDescription': 'your-subscription-description',
+    'InvoiceText': 'Donation test',
+    'OneTimePassword': 'code_from_end_user'
+}
+
+strex_transaction = StrexTransaction(**strex_transaction_data)
+
+target365_client.create_strex_transaction(strex_transaction)
+```
+
+### Rebilling with pre-authorization:
+```Python
+strex_transaction_data = {
+    'transactionId': 'your-unique-id',
+    'shortNumber': '2002',
+    'recipient': '+4798079008',
+    'content': 'your-sms-text-to-end-user',
+    'merchantId': 'your-merchant-id',
+    'age': 18,
+    'price': 10,
+    'serviceCode': '14002',
+    'preAuthServiceId': 'your-service-id',
+    'invoiceText': 'Donation test'
+}
+
+strex_transaction = StrexTransaction(**strex_transaction_data)
+
+target365_client.create_strex_transaction(strex_transaction)
+```
 
 ## Testing
 

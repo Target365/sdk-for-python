@@ -90,7 +90,7 @@ out_message.transactionId = str(uuid.uuid4())
 out_message.sender = "Target365"
 out_message.recipient = "+4798079008"
 out_message.content = "Hello World from SMS!"
-out_message.tags = { "tag1", "group/subgroup/tag2" }
+out_message.tags = { "tag1", "grouping:group/subgroup/tag2" }
 target365_client.create_out_message(out_message)
 ```
 

@@ -15,6 +15,7 @@ name = "target365_sdk"
 class ApiClient:
     PING = "api/ping"
     LOOKUP = "api/lookup"
+    LOOKUP_FREETEXT = "api/lookup/freetext"
     KEYWORDS = "api/keywords"
     OUT_MESSAGES = "api/out-messages"
     OUT_MESSAGE_EXPORT = "api/export/out-messages"
@@ -67,6 +68,25 @@ class ApiClient:
 
         lookup_result = LookupResult(**response.json())
         return lookup_result
+
+    def lookup_freetext(self, freetext):
+        """
+        Looks up address info from free text (name, address...).
+        :freetext: Free text like name or address. (required).
+        :return: Array of LookupResult objects.
+        """
+
+        if freetext is None:
+            raise ValueError("freetext")
+
+        query = {"input": freetext}
+        response = self.client.get_with_params(self.LOOKUP_FREETEXT, query)
+
+        if response.status_code == self.NOT_FOUND:
+            return None
+        
+        response.raise_for_status()
+        return LookupResult.from_list(response.json())
 
     def create_keyword(self, keyword):
         """

@@ -1,3 +1,4 @@
+from re import A
 import pytest
 import os
 import uuid
@@ -94,6 +95,7 @@ def test_out_message_sequence(client, valid_short_number_id):
             'sender': '0000',
             'strex': {
                 'merchantId': 'mer_test',
+                'usinessModel': 'STREX-PAYMENT',
                 'serviceCode': '14002'
             }
         }
@@ -111,6 +113,7 @@ def test_out_message_sequence(client, valid_short_number_id):
     # This is a nested model inside the OutMessage model
     out_message_strex = OutMessageStrex()
     out_message_strex.merchantId = 'mer_test'
+    out_message_strex.businessModel = 'STREX-PAYMENT'
     out_message_strex.serviceCode = '14002'
     out_message_strex.invoiceText = 'This is my invoice text'
     out_message_strex.price = 9.90
@@ -190,6 +193,8 @@ def test_get_in_message(client, valid_short_number_id, transaction_id):
 def test_lookup_should_return_result(client):
     assert client.lookup("+4798079008") is not None
 
+def test_lookup_freetext_should_return_result(client):
+    assert client.lookup_freetext("+4798079008") is not None
 
 def test_create_one_time_password(client, random_transaction_id):
     one_time_password_data = {
@@ -219,6 +224,7 @@ def test_strex_transaction_sequence(client, random_transaction_id):
         "price": 10,
         "timeout": 10,
         "recipient": "+4798079008",
+        "businessModel": "STREX-PAYMENT",
         "serviceCode": "14002",
         "shortNumber": "0000",
         "oneTimePassword": "1234"
@@ -234,7 +240,7 @@ def test_strex_transaction_sequence(client, random_transaction_id):
 
     # get_strex_transaction will wait up to 20 secs for trans to finish
     strex_transaction = client.get_strex_transaction(random_transaction_id)
-
+    assert strex_transaction.statusCode == StatusCodes.OK
     assert strex_transaction.detailedStatusCode == DetailedStatusCodes.DELIVERED
 
     # reverse_strex_transaction will wait up to 20 secs if trans isn't finished
@@ -247,12 +253,13 @@ def test_strex_transaction_sequence(client, random_transaction_id):
 
 def test_user_validity(client):
     validity = client.get_strex_user_info("mer_test", "+4799031520")
+    
     assert validity == UserValidity.Full
 
 def test_get_server_public_key(client):
-    public_key = client.get_server_public_key('2021-07-27')
-
-    assert public_key.accountId == 8
+    public_key = client.get_server_public_key('2023-11-01')
+    
+    assert public_key.name == '2023-11-01'
 
 
 def test_get_client_public_keys(client, api_key_name):

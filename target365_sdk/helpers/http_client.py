@@ -23,7 +23,7 @@ class HttpClient:
             binascii.unhexlify(self.privateKey), curve=ecdsa.NIST256p)
 
     def get(self, path):
-        return requests.get(self._build_url(path), headers=self._get_auth_header("get", self._build_url(path)))
+        return requests.get(self._build_url(path), headers=self._get_auth_headers("get", self._build_url(path)))
 
     def get_with_params(self, path, query_params):
 
@@ -35,7 +35,7 @@ class HttpClient:
         return requests.get(
             self._build_url(path),
             params=query_params,
-            headers=self._get_auth_header("get", absolute_uri)
+            headers=self._get_auth_headers("get", absolute_uri)
         )
 
     def post(self, path, body):
@@ -43,7 +43,7 @@ class HttpClient:
         return requests.post(
             self._build_url(path),
             data=json_encoded,
-            headers=self._get_auth_header("post", self._build_url(path), json_encoded)
+            headers=self._get_auth_headers("post", self._build_url(path), json_encoded)
         )
 
     def put(self, path, body):
@@ -51,21 +51,21 @@ class HttpClient:
         return requests.put(
             self._build_url(path),
             data=json_encoded,
-            headers=self._get_auth_header("put", self._build_url(path), json_encoded)
+            headers=self._get_auth_headers("put", self._build_url(path), json_encoded)
         )
 
     def delete(self, path):
         return requests.delete(
             self._build_url(path),
-            headers=self._get_auth_header("delete", self._build_url(path))
+            headers=self._get_auth_headers("delete", self._build_url(path))
         )
 
     def _build_url(self, path):
         return (self.base_uri + path)
 
-    def _get_auth_header(self, method, uri, body=None):
+    def _get_auth_headers(self, method, uri, body=None):
         signature = self._get_signature(method, uri, body)
-        return {"Authorization": "ECDSA " + signature}
+        return { "Authorization": "ECDSA " + signature, "X-SDK": "Python", "X-Sdk-Version": "1.8.2" }
 
     def _get_signature(self, method, uri, body=None):
         timestamp = int(time.time())

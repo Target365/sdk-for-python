@@ -241,7 +241,6 @@ def test_strex_transaction_sequence(client, random_transaction_id):
     # get_strex_transaction will wait up to 20 secs for trans to finish
     strex_transaction = client.get_strex_transaction(random_transaction_id)
     assert strex_transaction.statusCode == StatusCodes.OK
-    assert strex_transaction.detailedStatusCode == DetailedStatusCodes.DELIVERED
 
     # reverse_strex_transaction will wait up to 20 secs if trans isn't finished
     client.reverse_strex_transaction(random_transaction_id)

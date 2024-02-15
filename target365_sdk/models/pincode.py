@@ -10,4 +10,5 @@ class Pincode(Model):
             'prefixText',
             'suffixText',
             'pincodeLength',
+            'maxAttempts',
         ]

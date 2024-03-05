@@ -433,10 +433,10 @@ Delivery reports contains two status codes, one overall called `StatusCode` and 
 
 ### Send pincode
 This example shows how to send pincodes to users and verify their input to validate their phonenumbers.
-#### Request
+
 ```Python
 pincode = Pincode()
-pincode.transactionId = transaction_id
+pincode.transactionId = str(uuid.uuid4())
 pincode.sender = "Target365"
 pincode.recipient = "+4798079008"
 pincode.prefixText = "Your pincode is "
@@ -448,7 +448,6 @@ target365_client.send_pincode(pincode)
 
 ### Verify pincode
 This example shows how to verify the pincode sent in the previous step and entered on a web page by the user. Use the TransactionId provided in the previous step.
-#### Request
 ```
 result = target365_client.verify_pincode(pincode.transactionId, pin) # Returns true if correct and max-attempts not exceeded, otherwise false
 ```

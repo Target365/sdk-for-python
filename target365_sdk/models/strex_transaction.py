@@ -8,6 +8,7 @@ class StrexTransaction(Model):
             'sessionId',
             'correlationId',
             'shortNumber',
+            'keywordId',
             'recipient',
             'content',
             'oneTimePassword',

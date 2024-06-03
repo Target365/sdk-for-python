@@ -65,7 +65,7 @@ class HttpClient:
 
     def _get_auth_headers(self, method, uri, body=None):
         signature = self._get_signature(method, uri, body)
-        return { "Authorization": "ECDSA " + signature, "X-SDK": "Python", "X-Sdk-Version": "1.8.2" }
+        return { "Authorization": "ECDSA " + signature, "X-SDK": "Python", "X-Sdk-Version": "1.8.6" }
 
     def _get_signature(self, method, uri, body=None):
         timestamp = int(time.time())

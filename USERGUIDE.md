@@ -442,10 +442,13 @@ pincode.sender = "Target365"
 pincode.recipient = "+4798079008"
 pincode.prefixText = "Your pincode is "
 pincode.suffixText = " to log on to acme.inc"
-pincode.maxAttempts = 3 # must be between 1 and 5
+pincode.pincodeLength = 4
+pincode.maxAttempts = 3
 
 target365_client.send_pincode(pincode)
 ```
+
+prefixText, suffixText and pincodeLength are optional. If specified, pincodeLength must be between 4 and 6 and maxAttempts must be between 1 and 5.
 
 ### Verify pincode
 This example shows how to verify the pincode sent in the previous step and entered on a web page by the user. Use the TransactionId provided in the previous step.

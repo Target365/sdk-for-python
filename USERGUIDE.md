@@ -572,7 +572,7 @@ strex_transaction_data = {
 }
 
 strex_transaction = StrexTransaction(**strex_transaction_data)
-transaction.properties = { 'message_prefix': 'Dear customer...', 'message_suffix': 'Best regards...' }
+strex_transaction.properties = { 'message_prefix': 'Dear customer...', 'message_suffix': 'Best regards...' }
 
 target365_client.create_strex_transaction(strex_transaction)
 ```

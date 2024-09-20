@@ -165,7 +165,7 @@ If your service requires a minimum age of the End User, each payment transaction
 
 ### Create a Strex payment transaction
 This example creates a 1 NOK Strex payment transaction that the end user will confirm by replying "OK" to an SMS from Strex.
-You can use message_prefix and message_suffix custom properties to influence the start and end of the SMS sent by Strex.
+
 ```Python
 transaction = StrexTransaction()
 transaction.transactionId = str(uuid.uuid4())
@@ -175,7 +175,6 @@ transaction.merchantId = "YOUR_MERCHANT_ID"
 transaction.price = 1
 transaction.serviceCode = "14002"
 transaction.invoiceText = "Donation test"
-transaction.properties = { 'message_prefix': 'Dear customer...', 'message_suffix': 'Best regards...' }
 transaction.smsConfirmation = True
 
 target365_client.create_strex_transaction(transaction)
@@ -553,7 +552,8 @@ to bill via Strex Payment.
 
 ### Pre-authorization via API with SMS
 Pre-authorization via API can be used with SMS confirmation.
-PreAuthServiceId is an id chosen by you and must be used for all subsequent rebilling. PreAuthServiceDescription is optional, but should be set as this text will be visible for the end user on the Strex "My Page" web page. Here's an example:
+PreAuthServiceId is an id chosen by you and must be used for all subsequent rebilling. PreAuthServiceDescription is optional, but should be set as this text will be visible for the end user on the Strex "My Page" web page. You can use message_prefix and message_suffix custom properties to influence the start and end of the confirmation SMS sent by Strex.
+Here's an example:
 
 ```Python
 transactionId = "your-unique-id"
@@ -572,6 +572,7 @@ strex_transaction_data = {
 }
 
 strex_transaction = StrexTransaction(**strex_transaction_data)
+transaction.properties = { 'message_prefix': 'Dear customer...', 'message_suffix': 'Best regards...' }
 
 target365_client.create_strex_transaction(strex_transaction)
 ```

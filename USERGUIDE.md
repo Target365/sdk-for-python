@@ -311,7 +311,7 @@ This example creates a new keyword on short number 2002 that forwards incoming S
 keyword = Keyword()
 keyword.shortNumberId = "NO-2002"
 keyword.keywordText = "HELLO"
-keyword.mode = "Text"
+keyword.mode = "Startswith"
 keyword.forwardUrl = "https://your-site.net/api/receive-sms"
 keyword.enabled = True
 

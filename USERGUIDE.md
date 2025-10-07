@@ -175,6 +175,7 @@ transaction.merchantId = "YOUR_MERCHANT_ID"
 transaction.price = 1
 transaction.serviceCode = "14002"
 transaction.invoiceText = "Donation test"
+transaction.content = "SMS_TEXT_TO_ENDUSER"
 transaction.smsConfirmation = True
 
 target365_client.create_strex_transaction(transaction)
@@ -207,6 +208,7 @@ transaction.merchantId = "YOUR_MERCHANT_ID"
 transaction.price = 1
 transaction.serviceCode = "14002"
 transaction.invoiceText = "Donation test"
+transaction.content = "SMS_TEXT_TO_ENDUSER"
 transaction.oneTimePassword = "ONE_TIME_PASSWORD_FROM_USER"
 
 target365_client.create_strex_transaction(transaction)

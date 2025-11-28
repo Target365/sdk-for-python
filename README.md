@@ -19,7 +19,7 @@ Use this openssl command to extract the public key in PEM-format:
 ```
 openssl ec -in mykey.pem -pubout -out pubkey.pem
 ```
-You can then send us the pubkey.pem file. The file should look something like this:
+The file should look something like this:
 ```
 -----BEGIN PUBLIC KEY-----
 MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEuVHnFqJxiBC9I5+8a8Sx66brBCz3

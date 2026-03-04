@@ -509,6 +509,7 @@ PreAuth section of the keyword in Strex Connect or via the SDK.
 ```Python
 preauth = KeywordPreAuthSettings()
 preauth.active = true
+preauth.age = 18
 preauth.infoText = "Info message sent before preauth message"
 preauth.infoSender = "2002"
 preauth.prefixMessage = "Text inserted before preauth text"

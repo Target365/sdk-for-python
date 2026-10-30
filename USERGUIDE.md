@@ -453,6 +453,7 @@ prefixText, suffixText and pincodeLength are optional. If specified, pincodeLeng
 
 ### Verify pincode
 This example shows how to verify the pincode sent in the previous step and entered on a web page by the user. Use the TransactionId provided in the previous step.
+Pincode is valid for five minutes.
 ```
 result = target365_client.verify_pincode(pincode.transactionId, pin) # Returns true if correct and max-attempts not exceeded, otherwise false
 ```
